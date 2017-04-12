@@ -1,2 +1,2 @@
-# City-Sim
+# Booking-plugin
 web app development assignment
