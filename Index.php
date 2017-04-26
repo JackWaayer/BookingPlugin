@@ -22,6 +22,7 @@
 
 
 	require_once __DIR__ . '/CJadmin.php'; 
+	require_once __DIR__ . '/CJcrud.php'; 
 	
 	
 	//	simple variable debug function

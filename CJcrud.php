@@ -118,7 +118,7 @@ function bookingSettingsLink($links) {
 
 //usage: [displayBooking]
 //display all bookings by using a shortcode
-function CJdisplayfaq() {
+function CJdisplayBooking() {
     global $wpdb;
 
     $query = "SELECT * FROM CJ_booking";
@@ -151,7 +151,7 @@ function CJ_booking_crud() {
 
 	echo  '<div id="msg" style="overflow: auto"></div>
 		<div class="wrap">
-		<h2>WAD 8. Simple FAQ <a href="?page=WADsimplefaq&command=new" class="add-new-h2">Add New</a></h2>
+		<h2>WAD 8. Simple FAQ <a href="?page=CJbooking&command=new" class="add-new-h2">Add New</a></h2>
 		<div style="clear: both"></div>';
 
 // !!WARNING: there is no data validation conducted on the _REQUEST or _POST information. It is highly 
@@ -160,9 +160,9 @@ function CJ_booking_crud() {
 	
 //current booking id for delete/edit commands
 	if (isset($_REQUEST['id'])) 
-		$bookingid = $_REQUEST['id']; 
+		$bookingID = $_REQUEST['id']; 
 	else 
-		$bookingid = '';
+		$bookingID = '';
 
 //current CRUD command		
 	if (isset($_REQUEST["command"])) 
@@ -174,11 +174,11 @@ function CJ_booking_crud() {
     switch ($command) {
 	//operations access through the URL	
 		case 'view':
-			CJ_booking_view($bookingid);
+			CJ_booking_view($bookingID);
 		break;
 		
 		case 'edit':
-			$msg = CJ_booking_form('update', $bookingid); //notice the $bookingid passed for the form for an update/edit
+			$msg = CJ_booking_form('update', $bookingID); //notice the $bookingID passed for the form for an update/edit
 		break;
 
 		case 'new':
@@ -189,30 +189,57 @@ function CJ_booking_crud() {
 		
     //operations performing the various database tasks based on the previous CRUD command
 		case 'delete':
-			$msg = CJ_booking_delete($bookingid); //remove a booking entry
+			$msg = CJ_booking_delete($bookingID); //remove a booking entry
 			$command = '';
 		break;
 
 		case 'update':
-			$msg = WAD_faq_update($faqdata); //update an existing faq
+			$msg = CJ_booking_update($bookingData); //update an existing faq
 			$command = '';
 		break;
 
 		case 'insert':	
-			$msg = WAD_faq_insert($faqdata); //prepare a blank form for adding a new faq entry
+			$msg = CJ_booking_insert($bookingData); //prepare a blank form for adding a new faq entry
 			$command = '';
 		break;
 	}
 	
 //a simple catchall if the command is not found in the switch selector
-	if (empty($command)) WAD_faq_list(); //display a list of the faqs if no command issued
+	if (empty($command)) CJ_booking_list(); //display a list of the faqs if no command issued
 
 //show any information messages	
 	if (!empty($msg)) {
-      echo '<p><a href="?page=WADsimplefaq"> back to the FAQ list </a></p> Message: '.$msg;      
+      echo '<p><a href="?page=CJbooking"> back to the FAQ list </a></p> Message: '.$msg;      
 	}
 	echo '</div>';
 }
+
+
+
+
+
+
+
+//view all the detail for a single FAQ
+function CJ_booking_view($id) {
+   global $wpdb;
+
+   //https://codex.wordpress.org/Class_Reference/wpdb#Protect_Queries_Against_SQL_Injection_Attacks
+   //safer preferred method of passing values to an SQL query this is not a substitute for data validation
+   //this method merely reduces the likelyhood of SQL injections
+   $qry = $wpdb->prepare("SELECT * FROM CJ_booking WHERE id = %s",$id);
+   
+   //$qry = $wpdb->prepare("SELECT * FROM WAD_faq WHERE id = %s",array($id)); //alternative using an array
+//pr($qry); //uncomment this line to see the prepared query
+   $row = $wpdb->get_row($qry);
+   
+   echo '<p>';
+   echo "Date:";
+   echo '<br/>';
+   echo $row->date;
+   echo '<p><a href="?page=CJbooking">&laquo; back to list</p>';
+}
+
 
 
 ?>
