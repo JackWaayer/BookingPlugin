@@ -128,7 +128,7 @@
 	
 	/*	Runs after the admin menu is printed to screens that aren't network- or user-admin screens.*/
 	//	http://codex.wordpress.org/Plugin_API/Action_Reference/admin_notices
-	add_action('admin_notices','adminNoticesHook');
+	/* add_action('admin_notices','adminNoticesHook');
 	function adminNoticesHook() {
 		?>
 			<div class="notice notice-success is-dismissible">
@@ -148,7 +148,7 @@
 			</div>
 		<?php
 	}
-
+ */
 
 	
 
