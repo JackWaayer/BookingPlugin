@@ -115,8 +115,8 @@ function bookingSettingsLink($links) {
 
 
 
-
-//usage: [displayBooking]
+//Bad Query!!!!
+/* //usage: [displayBooking]
 //display all bookings by using a shortcode
 function CJdisplayBooking() {
     global $wpdb;
@@ -131,7 +131,7 @@ function CJdisplayBooking() {
     }
     $buffer .= '</ol>';
     return $buffer;
-}
+} */
 
 
 
@@ -151,7 +151,7 @@ function CJ_booking_crud() {
 
 	echo  '<div id="msg" style="overflow: auto"></div>
 		<div class="wrap">
-		<h2>Make a Booking <a href="?page=CJbooking&command=view" class="add-new-h2">Add New</a></h2>
+		<h2>Booking CRUD <a href="?page=CJbooking&command=new" class="add-new-h2">Add New</a></h2>
 		<div style="clear: both"></div>';
 		
 	
@@ -211,7 +211,7 @@ function CJ_booking_crud() {
 
 	//show any information messages	
 	if (!empty($msg)) {
-      echo '<p><a href="?page=CJbooking"> back to the FAQ list </a></p> Message: '.$msg;      
+      echo '<p><a href="?page=CJbooking"> back to the booking list </a></p> Message: '.$msg;      
 	}
 	echo '</div>';
 }
@@ -222,7 +222,88 @@ function CJ_booking_crud() {
 
 
 
-//view all the detail for a single FAQ
+
+
+
+
+//The main dashboard listing with the CRUD links. Take note of the styleing used to align with
+//the Wordpress dashboard. Compare with the Wordpress Pages and Posts pages
+function CJ_booking_list() {
+   global $wpdb, $current_user;
+
+   //prepare the query for retrieving the FAQ's from the database
+   $query = "SELECT id, customer_id, room_id, date_in , date_out FROM CJ_booking";
+   $allBookings = $wpdb->get_results($query);
+
+   //prepare the table and use a default WP style - wp-list-table widefat and manage-column
+   echo '<table class="wp-list-table widefat">
+		<thead>
+			<tr>
+				<th scope="col" class="manage-column">ID</th>
+				<th scope="col" class="manage-column">Customer</th>
+				<th scope="col" class="manage-column">Room</th>
+				<th scope="col" class="manage-column">Date In</th>
+				<th scope="col" class="manage-column">Date Out</th>
+			</tr>
+		</thead>
+		<tbody>';
+    
+    foreach ($allBookings as $booking) {
+		//if ($booking->author_id == 0) $booking->author_id = $current_user->ID;
+		
+		//use a WP function to retrieve user information based on the id
+		//$user_info = get_userdata($booking->author_id);
+	   
+		//prepare the URL's for some of the CRUD - note again the use of the menu slug to maintain page location between operations	   
+		$edit_link = '?page=CJbooking&id=' . $booking->id . '&command=edit';
+		$view_link ='?page=CJbooking&id=' . $booking->id . '&command=view';
+		$delete_link = '?page=CJbooking&id=' . $booking->id . '&command=delete';
+
+		//use some inbuilt WP CSS to perform the hover effect for the edit/view/delete links
+		
+		echo '<tr>';
+		
+		// Edit, View and delete buttons
+		echo '<td><strong><a href="'.$edit_link.'" title="Edit Date In">' . $booking->date_in . '</a></strong>';
+		echo '<div class="row-actions">';
+		echo '<span class="edit"><a href="'.$edit_link.'" title="Edit this item">Edit</a></span> | ';
+		echo '<span class="view"><a href="'.$view_link.'" title="View this item">View</a></span> | ';
+		echo '<span class="trash"><a href="'.$delete_link.'" title="Move this item to Trash" onclick="return doDelete();">Trash</a></span>';
+		echo '</div>';
+		echo '</td>';
+		
+		
+		echo '<td>' . $booking->id . '</td>';
+		echo '<td>' . $booking->customer_id . '</td>';
+		echo '<td>' . $booking->room_id . '</td>';
+		echo '<td>' . $booking->date_in . '</td>';
+		echo '<td>' . $booking->date_out . '</td>';
+		
+		
+		//echo '<td>' . $user_info->user_login . '</td>';
+	   
+		//display the status in words depending on the current status value in the database - 0 or 1	   
+		// $status = array('Draft', 'Published');
+		// echo '<td>' . $status[$booking->status] . '</td>';
+		echo '</tr>';  
+    }
+	echo '</tbody></table>';
+	
+	//small piece of javascript for the delete confirmation	
+	echo "<script type='text/javascript'>
+			function doDelete() { if (!confirm('Are you sure?')) return false; }
+		  </script>";
+}
+
+
+
+
+
+
+
+
+
+//view all the detail for a single Booking
 function CJ_booking_view($id) {
 	global $wpdb;
 
@@ -268,72 +349,113 @@ function CJ_booking_view($id) {
 
 
 
-//The main dashboard listing with the CRUD links. Take note of the styleing used to align with
-//the Wordpress dashboard. Compare with the Wordpress Pages and Posts pages
-function CJ_booking_list() {
-   global $wpdb, $current_user;
 
-   //prepare the query for retrieving the FAQ's from the database
-   $query = "SELECT id, customer_id, room_id, date_in , date_out FROM CJ_booking";
-   $allBookings = $wpdb->get_results($query);
 
-   //prepare the table and use a default WP style - wp-list-table widefat and manage-column
-   echo '<table class="wp-list-table widefat">
-		<thead>
-			<tr>
-				<th scope="col" class="manage-column">ID</th>
-				<th scope="col" class="manage-column">Customer</th>
-				<th scope="col" class="manage-column">Room</th>
-				<th scope="col" class="manage-column">Date In</th>
-				<th scope="col" class="manage-column">Date Out</th>
-			</tr>
-		</thead>
-		<tbody>';
-    
-    foreach ($allBookings as $booking) {
-		//if ($booking->author_id == 0) $booking->author_id = $current_user->ID;
-		
-		//use a WP function to retrieve user information based on the id
-		//$user_info = get_userdata($booking->author_id);
-	   
-		//prepare the URL's for some of the CRUD - note again the use of the menu slug to maintain page location between operations	   
-		$edit_link = '?page=CJbooking&id=' . $booking->id . '&command=edit';
-		$view_link ='?page=CJbooking&id=' . $booking->id . '&command=view';
-		$delete_link = '?page=CJbooking&id=' . $booking->id . '&command=delete';
-
-		//use some inbuilt WP CSS to perform the hover effect for the edit/view/delete links
-		
-		echo '<tr>';
-		
-		/* echo '<td><strong><a href="'.$edit_link.'" title="Edit Date In">' . $booking->date_in . '</a></strong>';
-		echo '<div class="row-actions">';
-		echo '<span class="edit"><a href="'.$edit_link.'" title="Edit this item">Edit</a></span> | ';
-		echo '<span class="view"><a href="'.$view_link.'" title="View this item">View</a></span> | ';
-		echo '<span class="trash"><a href="'.$delete_link.'" title="Move this item to Trash" onclick="return doDelete();">Trash</a></span>';
-		echo '</div>';
-		echo '</td>'; */
-		
-		
-		echo '<td>' . $booking->id . '</td>';
-		echo '<td>' . $booking->customer_id . '</td>';
-		echo '<td>' . $booking->room_id . '</td>';
-		echo '<td>' . $booking->date_in . '</td>';
-		echo '<td>' . $booking->date_out . '</td>';
-		
-		
-		//echo '<td>' . $user_info->user_login . '</td>';
-	   
-		//display the status in words depending on the current status value in the database - 0 or 1	   
-		// $status = array('Draft', 'Published');
-		// echo '<td>' . $status[$booking->status] . '</td>';
-		echo '</tr>';  
-    }
-	echo '</tbody></table>';
-	
-	//small piece of javascript for the delete confirmation	
-	echo "<script type='text/javascript'>
-			function doDelete() { if (!confirm('Are you sure?')) return false; }
-		  </script>";
+//remove an existing Booking from the database
+function CJ_booking_delete($id) {
+   global $wpdb;
+   
+//$wpdb->delete can also be used here instead of a query
+//refer to the WAD_faq_view for details on the prepared query. 
+//$wpdb->prepare can be omitted if the $wpdb->delete version is used
+   $results = $wpdb->query($wpdb->prepare("DELETE FROM CJ_booking WHERE id=%s",$id));
+   if ($results) {
+      $msg = "Booking entry $id was successfully deleted.";
+   }
+   return $msg;
 }
+
+
+
+
+
+
+//add a new Booking to the database
+function CJ_booking_insert($data) {
+    global $wpdb, $current_user;
+
+//add in data validation and error checking here before updating the database!!
+    $wpdb->insert( 'CJ_booking',
+		  array(
+			'id' => stripslashes_deep($data['id']),
+			'customer_id' => stripslashes_deep($data['customer_id']),
+			'room_id' => ($data['room_id']),
+			'date_in' => ($data['date_in']),
+			'date_out' => $data['date_out']),
+		  array( '%s', '%s', '%s', '%s', '%s' ) );
+    $msg = "A Booking entry has been added";
+    return $msg;
+}
+
+
+
+
+
+
+
+
+//this is the form used for the insert as well as the edit/update of the FAQ data
+//here we introduce default values for the function parameter list. if the second parameter 
+//was omitted then the id will assume the value null (insert a new record - has no initial ID)
+function CJ_booking_form($command, $id = null) {
+    global $wpdb;
+
+//if the current command is insert then clear the form variables to ensure we have a blank
+//form before starting	
+    if ($command == 'insert') {
+      $booking->id = '';
+      $booking->customer_id   = '';
+	  $booking->room_id   = '';
+	  $booking->date_in   = '';
+	  $booking->date_out   = '';
+    }
+	
+//if the current command was 'edit' then retrieve the booking based on the id pased to this function
+//!!this SQL querey is open to potential injection attacks
+	if ($command == 'update') {
+        $booking = $wpdb->get_row("SELECT * FROM CJ_booking WHERE id = '$id'");
+	}
+
+//prepare the draft/published status for the HTML check boxes	
+	/* if (isset($faq)) {
+		$draftstatus = ($faq->status == 0)?"checked":"";
+		$pubstatus   = ($faq->status == 1)?"checked":"";
+	} */
+	
+//prepare the HTML form	
+    echo '<form name="CJbookingForm" method="post" action="?page=CJbooking">
+		
+		<input type="hidden" name="command" value="'.$command.'"/>
+		
+		<p>Booking ID:<br/>
+		<input type="text" name="booking_id" value="'.$booking->id.'"/>
+		
+		<p>Customer ID:<br/>
+		<input type="text" name="customer_id" value="'.$booking->customer_id.'"/>
+		
+		<p>Room ID:<br/>
+		<input type="text" name="room_id" value="'.$booking->room_id.'"/>
+		
+		<p>Date In:<br/>
+		<input type="date" name="date_in" value="'.$booking->date_in.'"/>
+		
+		<p>Date Out:<br/>
+		<input type="date" name="date_out" value="'.$booking->date_out.'"/>
+		</p>
+		<hr />
+		
+		<p class="submit"><input type="submit" name="Submit" value="Save Changes" class="button-primary" /></p>
+		</form>';
+		
+		//Status form info. May need this???
+		/* <p>
+		<label><input type="radio" name="status" value="0" '.$draftstatus.'> Draft</label> 
+		<label><input type="radio" name="status" value="1" '.$pubstatus.'> Published</label> 
+		</p> */
+		
+   echo '<p><a href="?page=CJbooking">&laquo; back to list</p>';		
+}
+
+
 
 ?>
