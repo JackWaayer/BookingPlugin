@@ -264,7 +264,7 @@ function CJ_booking_list() {
 		echo '<tr>';
 		
 		// Edit, View and delete buttons
-		echo '<td><strong><a href="'.$edit_link.'" title="Edit Date In">' . $booking->date_in . '</a></strong>';
+		echo '<td><strong><a href="'.$edit_link.'" title="Edit Booking">' . $booking->id . '</a></strong>';
 		echo '<div class="row-actions">';
 		echo '<span class="edit"><a href="'.$edit_link.'" title="Edit this item">Edit</a></span> | ';
 		echo '<span class="view"><a href="'.$view_link.'" title="View this item">View</a></span> | ';
@@ -273,7 +273,6 @@ function CJ_booking_list() {
 		echo '</td>';
 		
 		
-		echo '<td>' . $booking->id . '</td>';
 		echo '<td>' . $booking->customer_id . '</td>';
 		echo '<td>' . $booking->room_id . '</td>';
 		echo '<td>' . $booking->date_in . '</td>';
@@ -377,7 +376,6 @@ function CJ_booking_insert($data) {
 //add in data validation and error checking here before updating the database!!
     $wpdb->insert( 'CJ_booking',
 		  array(
-			'id' => stripslashes_deep($data['id']),
 			'customer_id' => stripslashes_deep($data['customer_id']),
 			'room_id' => ($data['room_id']),
 			'date_in' => ($data['date_in']),
@@ -389,6 +387,23 @@ function CJ_booking_insert($data) {
 
 
 
+
+
+//update an existing booking in the database
+function CJ_booking_update($data) {
+    global $wpdb, $current_user;
+	
+//add in data validation and error checking here before updating the database!!
+    $wpdb->update('CJ_booking',
+		  array( 'id' => ($data['id']),
+				 'customer_id' => ($data['customer_id']),
+				 'room_id' => ($data['room_id']),
+				 'date_in' => ($data['date_in']),
+				 'date_out' => $data['date_out']),
+		  array( 'id' => $data['id']));
+    $msg = "Booking ".$data['id']." has been updated";
+    return $msg;
+}
 
 
 
@@ -403,7 +418,6 @@ function CJ_booking_form($command, $id = null) {
 //if the current command is insert then clear the form variables to ensure we have a blank
 //form before starting	
     if ($command == 'insert') {
-      $booking->id = '';
       $booking->customer_id   = '';
 	  $booking->room_id   = '';
 	  $booking->date_in   = '';
@@ -426,9 +440,7 @@ function CJ_booking_form($command, $id = null) {
     echo '<form name="CJbookingForm" method="post" action="?page=CJbooking">
 		
 		<input type="hidden" name="command" value="'.$command.'"/>
-		
-		<p>Booking ID:<br/>
-		<input type="text" name="booking_id" value="'.$booking->id.'"/>
+		<input type="hidden" name="id" value="'.$id.'"/>
 		
 		<p>Customer ID:<br/>
 		<input type="text" name="customer_id" value="'.$booking->customer_id.'"/>
