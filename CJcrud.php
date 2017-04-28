@@ -57,12 +57,10 @@ function CJ_booking_install () {
 	
 			$sql = 'CREATE TABLE CJ_booking (
 			id int(11) NOT NULL auto_increment,
-			author_id int(11) NOT NULL,
-			question_date date NOT NULL,
-			question text NOT NULL,
-			answer_date date NOT NULL,
-			answer text NOT NULL,
-			status tinyint(4) NOT NULL,
+			customer_id int(11) NOT NULL,
+			room_id int(11) NOT NULL,
+			date_in text NOT NULL,
+			date_out date NOT NULL,
 			PRIMARY KEY (id)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8;';
 
@@ -132,6 +130,11 @@ function CJdisplayBooking() {
     $buffer .= '</ol>';
     return $buffer;
 } */
+
+add_shortcode('booking', 'showBooking');
+function showBooking(){
+	CJ_booking_crud();
+}
 
 
 
@@ -248,7 +251,7 @@ function CJ_booking_list() {
 		</thead>
 		<tbody>';
     
-    foreach ($allBookings as $booking) {
+    	foreach ($allBookings as $booking) {
 		//if ($booking->author_id == 0) $booking->author_id = $current_user->ID;
 		
 		//use a WP function to retrieve user information based on the id
@@ -285,7 +288,7 @@ function CJ_booking_list() {
 		// $status = array('Draft', 'Published');
 		// echo '<td>' . $status[$booking->status] . '</td>';
 		echo '</tr>';  
-    }
+    	}
 	echo '</tbody></table>';
 	
 	//small piece of javascript for the delete confirmation	
