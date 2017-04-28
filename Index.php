@@ -24,6 +24,11 @@
 	require_once __DIR__ . '/CJadmin.php'; 
 	require_once __DIR__ . '/CJcrud.php'; 
 	require_once __DIR__ . '/CJrooms.php'; 
+	require_once __DIR__ . '/CJbooking.php';
+	
+
+
+
 	
 	
 	//	simple variable debug function

@@ -26,10 +26,6 @@ if (!function_exists('pr')) {
 
 
 
-add_shortcode('rooms', 'listRooms');
-function listRooms(){
-    CJ_room_details();
-}
 
 
 
@@ -46,12 +42,17 @@ function CJ_list_rooms() {
     $query = "SELECT * FROM CJ_room";
     $allrecs = $wpdb->get_results($query);
 	
-    $buffer = '<hr /><table>';
+    $buffer = '<hr />
+                <table>
+                    <th>Room Type</th>
+                    <th>Rooms Available</th>
+                    <th>Rate</th>
+                    <th>Utillities</th>';
     foreach ($allrecs as $rec) {
-		$buffer .= '<tr><td>'.$rec->room_type.'</td><td>'.$rec->rooms_available.'</td><td>'.$rec->rate.'</td><td>'.$rec->utillities.'</td></tr>';
-		//$buffer .= '<td><a href="?page_id='.$page_id.'&cmd=second&bid='.$rec->id.'">Select</a></td>';	
+		$buffer .= '<tr><td>'.$rec->room_type.'</td><td>'.$rec->rooms_available.'</td><td>'.$rec->rate.'</td><td>'.$rec->utillities.'</td></tr>';	
     }
     $buffer .= '</table>';
+    $buffer .= '<a href="?page_id='.$page_id.'&cmd=login">Login</a>';
     echo $buffer;
 }
 
