@@ -12,7 +12,7 @@ if (!function_exists('pr')) {
 
 
 //Current database version for the Booking Plugin
-$CJ_dbversion = "0.1";
+$CJ_dbversion = "0.2";
 
 
 
@@ -59,7 +59,7 @@ function CJ_booking_install () {
 			id int(11) NOT NULL auto_increment,
 			customer_id int(11) NOT NULL,
 			room_id int(11) NOT NULL,
-			date_in text NOT NULL,
+			date_in date NOT NULL,
 			date_out date NOT NULL,
 			PRIMARY KEY (id)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8;';
@@ -70,7 +70,8 @@ function CJ_booking_install () {
 			update_option( "CJ_dbversion", $CJ_dbversion );
 			add_option("CJ_dbversion", $CJ_dbversion);
 		}  
-   }	
+	}
+   
 }   
 
 

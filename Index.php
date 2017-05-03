@@ -20,7 +20,8 @@
 	*/
 
 
-
+	require_once __DIR__ . '/CJlogin.php';
+	require_once __DIR__ . '/CJlogout.php';
 	require_once __DIR__ . '/CJadmin.php'; 
 	require_once __DIR__ . '/CJcrud.php'; 
 	require_once __DIR__ . '/CJrooms.php'; 
@@ -38,6 +39,38 @@
 	}
 	
 	
+	//Basic routing
+	add_shortcode('plugin', 'myRoute');
+	function myRoute(){
+    global $page_id; //required to determine the currently active page
+    global $wpdb;
+
+    //parse any incoming actions or commands from our page - can be placed in it's own function
+	if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
+		$cmd = $_GET['cmd'];
+		$msg = $_GET['msg'];
+		$data = $_POST;
+        /*Diagnostics
+		pr($data);*/
+		switch ($cmd) {
+			case "bookings":
+				CJ_list_bookings($_SESSION['status']);
+				break;
+			case "login":
+				CJ_login($data, $msg);
+				break;
+			case "logout":
+				CJ_logout();
+				break;
+			default:
+				CJ_list_rooms(); //catch random commands
+		}
+	} else CJ_list_rooms();	
+}
+	
+	
+	
+	
 
 	/*	Runs when the template calls the wp_head() function. 
 		This hook is generally placed near the top of a page template between <head> and </head>. 
@@ -49,28 +82,6 @@
 	}
 
 
-	
-
-	add_shortcode('shortcode', 'myShortcode');
-	function myShortcode(){
-		?>
-			<p>Look it's shortcode!</p>
-		<?php
-	}
-
-
-
-	/* 	applied to the post content retrieved from the database, prior to printing on the screen (also used in some other operations, such as trackbacks).
-		try adding any of the bad words below into a post */
-	//	add the filter hook  onto the post content
-	add_filter( 'the_content', "filterContent");
-	function filterContent($post_content) {
-		//	array of some bad words
-		$badlist= array("badword", "crap", "poop");
-		//	replace all occurances of the badwords in the content of a post
-		$newpost = str_replace($badlist, "****", $post_content);
-		return $newpost;
-	}
 
 
 

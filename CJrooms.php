@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 //simple variable debug function
 //usage: pr($avariable);
@@ -27,16 +28,14 @@ if (!function_exists('pr')) {
 
 
 
-
-
-
-
-
 //========================================================================================
 //just display a list of the records in the database
 // this assumes the WAD11.sql has been preloaded
 function CJ_list_rooms() {
     global $wpdb, $page_id;
+	
+	echo '<h2>Room Details</h2>';
+	
 
 	//grab all the rooms from the database
     $query = "SELECT * FROM CJ_room";
@@ -56,15 +55,6 @@ function CJ_list_rooms() {
     echo $buffer;
 }
 
-
-
-
-
-//-------------------------------------------------------------------
-function CJ_room_details() {
-	echo '<h2>Room Details</h2>';
-	CJ_list_rooms();
-}
 
 
 
