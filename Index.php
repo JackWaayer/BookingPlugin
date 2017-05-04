@@ -23,13 +23,97 @@
 	require_once __DIR__ . '/CJlogin.php';
 	require_once __DIR__ . '/CJlogout.php';
 	require_once __DIR__ . '/CJadmin.php'; 
-	require_once __DIR__ . '/CJcrud.php'; 
 	require_once __DIR__ . '/CJrooms.php'; 
 	require_once __DIR__ . '/CJbooking.php';
 	
 
 
 
+	//Current database version for the Booking Plugin
+	$CJ_dbversion = "0.4";
+	
+	
+	
+	add_action('plugins_loaded', 'CJ_update_db_check');
+	//check to see if there is any update required for the database, 
+	//just in case we updated the plugin without reactivating it
+	function CJ_update_db_check() {
+		global $CJ_dbversion;
+		if (get_site_option('CJ_dbversion') != $CJ_dbversion) CJ_booking_install();  
+	}
+	
+	//install or retrieve the latest database version 
+	function CJ_booking_install () {
+		global $wpdb;
+		global $CJ_dbversion;
+
+		$currentversion = get_option( "CJ_dbversion" ); //retrieve the version of the database which has been installed.
+		if ($CJ_dbversion > $currentversion) { //version still good?
+			if($wpdb->get_var("show tables like 'CJ_booking'") != 'CJ_booking') {//check if the table already exists
+		
+				$sql = 'CREATE TABLE CJ_booking (
+				id int(11) NOT NULL auto_increment,
+				account_id int(11) NOT NULL,
+				room_id int(11) NOT NULL,
+				date_reserved date NOT NULL,
+				date_in date NOT NULL,
+				date_out date NOT NULL,
+				type int(11) NOT NULL,
+				status int(11) NOT NULL,
+				PRIMARY KEY (id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+				
+				CREATE TABLE CJ_account (
+				id int(11) NOT NULL auto_increment,
+				first_name varchar(30) NOT NULL,
+				last_name varchar(30) NOT NULL,
+				home_number varchar(20) NOT NULL,
+				mobile_number varchar(20) NOT NULL,
+				user_id int(11) NOT NULL,
+				PRIMARY KEY (id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+				
+				CREATE TABLE CJ_room (
+				id int(11) NOT NULL auto_increment,
+				room_name varchar(30) NOT NULL,
+				description varchar(30) NOT NULL,
+				price float(3,2) NOT NULL,
+				PRIMARY KEY (id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+				
+				CREATE TABLE CJ_review (
+				id int(11) NOT NULL auto_increment,
+				rating int(1) NOT NULL,
+				description varchar(200) NOT NULL,
+				PRIMARY KEY (id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+				
+				CREATE TABLE CJ_extra (
+				id int(11) NOT NULL auto_increment,
+				extra_name varchar(20) NOT NULL,
+				price float(3,2) NOT NULL,
+				PRIMARY KEY (id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+				
+				CREATE TABLE CJ_booking_extra (
+				id int(11) NOT NULL auto_increment,
+				booking_id int(11) NOT NULL,
+				extra_id int(11) NOT NULL,
+				PRIMARY KEY (id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;';
+
+				require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+				dbDelta($sql);
+				//update the version of the database with the new one
+				update_option( "CJ_dbversion", $CJ_dbversion );
+				add_option("CJ_dbversion", $CJ_dbversion);
+			}  
+		}
+   
+	} 
+	
+	
+	
 	
 	
 	//	simple variable debug function

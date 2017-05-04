@@ -26,7 +26,7 @@ function CJ_list_bookings($status){
 		$query = $wpdb->prepare("SELECT * FROM CJ_booking");
 	}
 	else if($status == 1){
-		$query = $wpdb->prepare("SELECT * FROM cj_booking WHERE customer_id = %s",$uid);
+		$query = $wpdb->prepare("SELECT * FROM cj_booking WHERE account_id = %s",$uid);
 	}
 	else{
 		$query = "";
@@ -37,12 +37,12 @@ function CJ_list_bookings($status){
 	
     $buffer = '<hr />
                 <table>
-                    <th>Customer ID</th>
+                    <th>Account ID</th>
                     <th>Room ID</th>
                     <th>Date In</th>
                     <th>Date Out</th>';
     foreach ($allrecs as $rec) {
-		$buffer .= '<tr><td>'.$rec->customer_id.'</td><td>'.$rec->room_id.'</td><td>'.$rec->date_in.'</td><td>'.$rec->date_out.'</td></tr>';	
+		$buffer .= '<tr><td>'.$rec->account_id.'</td><td>'.$rec->room_id.'</td><td>'.$rec->date_in.'</td><td>'.$rec->date_out.'</td></tr>';	
     }
     $buffer .= '</table>';
     $buffer .= '<a href="?page_id='.$page_id.'&cmd=logout">Logout</a>';
