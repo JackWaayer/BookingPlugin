@@ -18,7 +18,7 @@ function CJ_login_form(){
     $credentials = '';
 
     echo   '<form action="" method="POST">
-                <input type="text" name="email" placeholder="Email"><br />
+                <input type="text" name="username" placeholder="Username"><br />
                 <input type="password" name="password" placeholder="Password"><br />
                 <button type="submit">Sign In</button>
             </form>
@@ -42,25 +42,25 @@ function CJ_login($data, $msg){
 	
     
 
-    if(isset($data["email"])){
+    if(isset($data["username"])){
 		
-		$email = $data["email"];
+		$username = $data["username"];
 		$password = $data["password"];
 		
 		//Prepare Query
-        $qry = $wpdb->prepare("SELECT * FROM wp_users WHERE user_login = %s",$email);
+        $qry = $wpdb->prepare("SELECT * FROM wp_users WHERE user_login = %s",$username);
         
 		//Use query to get the users record via the email given
         $rec = $wpdb->get_results($qry);
 		
-		echo '<p>'.$data["email"].'</p>';
-        echo '<p>'.$rec[0]->user_pass.'</p>';
+		//echo '<p>'.$data["username"].'</p>';
+        //echo '<p>'.$rec[0]->user_pass.'</p>';
 		
 		if(!$password == '' && $password == $rec[0]->user_pass){
 			$_SESSION['uid'] = $rec[0]->ID;
-			$_SESSION['name'] = $rec[0]->user_login;
-			$_SESSION['status'] = $rec[0]->user_status;
-			header('Location:?page_id='.$page_id.'&cmd=bookings');
+			$_SESSION['username'] = $rec[0]->user_login;
+			$_SESSION['user_status'] = $rec[0]->user_status;
+			header('Location:?page_id='.$page_id.'&cmd=myProfile');
 		}
     }
     

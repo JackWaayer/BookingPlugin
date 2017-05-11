@@ -15,9 +15,9 @@ function CJ_list_bookings($status){
 	
 	global $wpdb, $page_id;
 	$uid = $_SESSION['uid'];
-	$username = $_SESSION['name'];
+	$username = $_SESSION['username'];
 	
-	echo '<h2>Bookings</h2>';
+	echo '<h2>My Profile</h2>';
 	echo '<h3>Hello '.$username.' welcome to the booking application.</h3>';
 	echo '<p>This is a list of your current bookings</p>';
 	
@@ -39,14 +39,23 @@ function CJ_list_bookings($status){
                 <table>
                     <th>Account ID</th>
                     <th>Room ID</th>
+					<th>Date Reserved</th>
                     <th>Date In</th>
                     <th>Date Out</th>';
     foreach ($allrecs as $rec) {
-		$buffer .= '<tr><td>'.$rec->account_id.'</td><td>'.$rec->room_id.'</td><td>'.$rec->date_in.'</td><td>'.$rec->date_out.'</td></tr>';	
+		$buffer .= '<tr>
+						<td>'.$rec->account_id.'</td>
+						<td>'.$rec->room_id.'</td>
+						<td>'.$rec->date_reserved.'</td>
+						<td>'.$rec->date_in.'</td>
+						<td>'.$rec->date_out.'</td>
+					</tr>';	
     }
     $buffer .= '</table>';
     $buffer .= '<a href="?page_id='.$page_id.'&cmd=logout">Logout</a>';
     echo $buffer;
+	
+	echo '<a href="?page_id='.$page_id.'&cmd=calender"><button>Make a booking</button></a>';
 }
 
 

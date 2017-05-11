@@ -137,14 +137,20 @@
         /*Diagnostics
 		pr($data);*/
 		switch ($cmd) {
-			case "bookings":
-				CJ_list_bookings($_SESSION['status']);
+			case "myProfile":
+				CJ_list_bookings($_SESSION['user_status']);
 				break;
 			case "login":
 				CJ_login($data, $msg);
 				break;
 			case "logout":
 				CJ_logout();
+				break;
+			case "calender":
+				CJ_calender();
+				break;
+			case "confirmation"
+				//CJ_confirmation();
 				break;
 			default:
 				CJ_list_rooms(); //catch random commands
