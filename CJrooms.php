@@ -27,10 +27,6 @@ if (!function_exists('pr')) {
 
 
 
-
-//========================================================================================
-//just display a list of the records in the database
-// this assumes the WAD11.sql has been preloaded
 function CJ_list_rooms() {
     global $wpdb, $page_id;
 	
@@ -38,21 +34,33 @@ function CJ_list_rooms() {
 	
 
 	//grab all the rooms from the database
-    $query = "SELECT * FROM CJ_room";
+    $query = "SELECT * FROM cj_room";
     $allrecs = $wpdb->get_results($query);
 	
     $buffer = '<hr />
                 <table>
-                    <th>Room Type</th>
-                    <th>Rooms Available</th>
-                    <th>Rate</th>
-                    <th>Utillities</th>';
+                    <th>Room Name</th>
+                    <th>Desription</th>
+                    <th>Price</th>';
     foreach ($allrecs as $rec) {
-		$buffer .= '<tr><td>'.$rec->room_type.'</td><td>'.$rec->rooms_available.'</td><td>'.$rec->rate.'</td><td>'.$rec->utillities.'</td></tr>';	
+		$buffer .= '<tr>
+						<td>'.$rec->room_name.'</td>
+						<td>'.$rec->description.'</td>
+						<td>'.$rec->price.'</td>
+					</tr>';	
     }
     $buffer .= '</table>';
-    $buffer .= '<a href="?page_id='.$page_id.'&cmd=login">Login</a>';
     echo $buffer;
+	
+	echo '<a href="?page_id='.$page_id.'&cmd=myProfile"><button>Return to Profile</button></a>';
+	echo '<a href="?page_id='.$page_id.'&cmd=calender"><button>Make a booking</button></a>';
+}
+
+function CJ_get_room($roomID){
+	global $wpdb;
+	
+	$qry = $wpdb->prepare("SELECT * FROM cj_room WHERE id = %s",$roomID);
+	return $wpdb->get_results($qry);
 }
 
 

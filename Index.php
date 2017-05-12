@@ -142,10 +142,16 @@
 				CJ_my_profile();
 				break;
 			case "login":
-				CJ_login($data, $msg);
+				CJ_login($data);
 				break;
 			case "logout":
 				CJ_logout();
+				break;
+			case "logoutSuccess":
+				CJ_logout_success();
+				break;
+			case "rooms":
+				CJ_list_rooms();
 				break;
 			case "calender":
 				CJ_calender();

@@ -39,7 +39,7 @@ function CJ_list_bookings($accountID){
     foreach ($allrecs as $rec) {
 		$buffer .= '<tr>
 						<td>'.$rec->account_id.'</td>
-						<td>'.$rec->room_id.'</td>
+						<td>'.CJ_get_room($rec->room_id)[0]->room_name.'</td>
 						<td>'.$rec->date_reserved.'</td>
 						<td>'.$rec->date_in.'</td>
 						<td>'.$rec->date_out.'</td>

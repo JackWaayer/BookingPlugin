@@ -10,9 +10,15 @@
 	
 	function CJ_logout(){
 		session_destroy();
-		header('Location:?page_id='.$page_id.'&cmd=login&msg="You have successfully logged out"');
+		header('Location:?page_id='.$page_id.'&cmd=logoutSuccess');
 	}
 	
+	
+	
+	function CJ_logout_success(){
+		echo '<h1>You have successfully logged out</h1>';
+		echo '<a href="?page_id='.$page_id.'&cmd=login">Login</a>';
+	}
 	
 	
 	
