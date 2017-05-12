@@ -25,6 +25,7 @@
 	require_once __DIR__ . '/CJadmin.php'; 
 	require_once __DIR__ . '/CJrooms.php'; 
 	require_once __DIR__ . '/CJbooking.php';
+	require_once __DIR__ . '/CJmy_profile.php';
 	
 
 
@@ -138,7 +139,7 @@
 		pr($data);*/
 		switch ($cmd) {
 			case "myProfile":
-				CJ_list_bookings($_SESSION['user_status']);
+				CJ_my_profile();
 				break;
 			case "login":
 				CJ_login($data, $msg);
@@ -149,7 +150,7 @@
 			case "calender":
 				CJ_calender();
 				break;
-			case "confirmation"
+			case "confirmation":
 				//CJ_confirmation();
 				break;
 			default:

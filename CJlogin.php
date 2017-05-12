@@ -58,7 +58,7 @@ function CJ_login($data, $msg){
 		
 		if(!$password == '' && $password == $rec[0]->user_pass){
 			$_SESSION['uid'] = $rec[0]->ID;
-			$_SESSION['username'] = $rec[0]->user_login;
+			//$_SESSION['username'] = $rec[0]->user_login;
 			$_SESSION['user_status'] = $rec[0]->user_status;
 			header('Location:?page_id='.$page_id.'&cmd=myProfile');
 		}

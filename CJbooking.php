@@ -11,22 +11,16 @@ if (!function_exists('pr')) {
 
 
 
-function CJ_list_bookings($status){
+function CJ_list_bookings($accountID){
 	
 	global $wpdb, $page_id;
-	$uid = $_SESSION['uid'];
-	$username = $_SESSION['username'];
-	
-	echo '<h2>My Profile</h2>';
-	echo '<h3>Hello '.$username.' welcome to the booking application.</h3>';
-	echo '<p>This is a list of your current bookings</p>';
-	
+	$status = $_SESSION['user_status'];
 	
 	if($status == 0){
 		$query = $wpdb->prepare("SELECT * FROM CJ_booking");
 	}
 	else if($status == 1){
-		$query = $wpdb->prepare("SELECT * FROM cj_booking WHERE account_id = %s",$uid);
+		$query = $wpdb->prepare("SELECT * FROM cj_booking WHERE account_id = %s",$accountID);
 	}
 	else{
 		$query = "";
@@ -52,10 +46,9 @@ function CJ_list_bookings($status){
 					</tr>';	
     }
     $buffer .= '</table>';
-    $buffer .= '<a href="?page_id='.$page_id.'&cmd=logout">Logout</a>';
+    
     echo $buffer;
 	
-	echo '<a href="?page_id='.$page_id.'&cmd=calender"><button>Make a booking</button></a>';
 }
 
 

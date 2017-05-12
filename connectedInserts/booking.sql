@@ -1,6 +1,6 @@
-insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (1, 1, '11/05/2017', '13/05/2017', '16/05/2017', 0, 0);
-insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (1, 2, '10/05/2017', '12/05/2017', '20/05/2017', 2, 0);
-insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (1, 2, '15/05/2017', '20/05/2017', '22/05/2017', 1, 0);
-insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (2, 1, '05/05/2017', '19/05/2017', '21/05/2017', 2, 1);
-insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (2, 2, '05/05/2017', '24/05/2017', '27/05/2017', 2, 1);
+insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (1, 1, '2017-05-11', '2017-05-13', '2017-05-16', 0, 0);
+insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (1, 2, '2017-05-10', '2017-05-12', '2017-05-20', 2, 0);
+insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (1, 2, '2017-05-15', '2017-05-20', '2017-05-22', 1, 0);
+insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (2, 1, '2017-05-05', '2017-05-19', '2017-05-21', 2, 1);
+insert into cj_booking (account_id, room_id, date_reserved, date_in, date_out, status, type) values (2, 2, '2017-05-05', '2017-05-24', '2017-05-27', 2, 1);
 
