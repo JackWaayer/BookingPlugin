@@ -13,9 +13,8 @@ if (!function_exists('pr')) {
 
 
 function CJ_login_form(){
-    global $wpdb, $page_id;
+    global $page_id;
 
-    $credentials = '';
 
     echo   '<form action="" method="POST">
                 <input type="text" name="username" placeholder="Username"><br />
@@ -26,7 +25,7 @@ function CJ_login_form(){
             <br />';
 
 
-    echo '<a href="?page_id='.$page_id.'&cmd=rooms">Back to Room types</a>';
+    echo '<a href="?page_id='.$page_id.'&cmd=register">Register</a>';
 }
 
 

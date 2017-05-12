@@ -26,6 +26,7 @@
 	require_once __DIR__ . '/CJrooms.php'; 
 	require_once __DIR__ . '/CJbooking.php';
 	require_once __DIR__ . '/CJmy_profile.php';
+	require_once __DIR__ . '/CJregister.php';
 	
 
 
@@ -144,6 +145,9 @@
 			case "login":
 				CJ_login($data);
 				break;
+			case "register":
+				CJ_register($data);
+				break;
 			case "logout":
 				CJ_logout();
 				break;
@@ -160,7 +164,7 @@
 				//CJ_confirmation();
 				break;
 			default:
-				CJ_list_rooms(); //catch random commands
+				CJ_login(); //catch random commands
 		}
 	} else CJ_list_rooms();	
 }
