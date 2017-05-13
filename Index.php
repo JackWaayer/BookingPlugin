@@ -35,6 +35,10 @@
 	$CJ_dbversion = "0.4";
 	
 	
+	//Calendar css
+	wp_enqueue_style( 'WAD2016', plugins_url('css/calendar.css',__FILE__));
+	
+	
 	
 	add_action('plugins_loaded', 'CJ_update_db_check');
 	//check to see if there is any update required for the database, 
@@ -157,8 +161,8 @@
 			case "rooms":
 				CJ_list_rooms();
 				break;
-			case "calender":
-				CJ_calender();
+			case "makeBooking":
+				CJ_make_booking();
 				break;
 			case "confirmation":
 				//CJ_confirmation();

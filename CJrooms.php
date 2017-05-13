@@ -56,11 +56,21 @@ function CJ_list_rooms() {
 	echo '<a href="?page_id='.$page_id.'&cmd=calender"><button>Make a booking</button></a>';
 }
 
+
+
 function CJ_get_room($roomID){
 	global $wpdb;
 	
 	$qry = $wpdb->prepare("SELECT * FROM cj_room WHERE id = %s",$roomID);
 	return $wpdb->get_results($qry);
+}
+
+
+
+function CJ_get_all_rooms(){
+	global $wpdb;
+	$query = "SELECT * FROM cj_room";
+    return $wpdb->get_results($query);
 }
 
 

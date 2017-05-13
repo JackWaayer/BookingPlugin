@@ -1,0 +1,40 @@
+#contact{
+    padding: 40px;
+    width: 300px;
+    background: #FFF;
+    border: 1px solid #29216d;
+    position: static;
+    margin-top:10px;
+    position: float; 
+    z-index: 200;
+}   
+.txt-input,
+.input{
+    color:#aaa;
+    margin: 3px 0;
+    font-family: Helvetica;
+    font-size: 11px;
+}
+.txt-input{
+    width: 250px;
+}
+.input, select{
+    width: 200px;
+}
+.txt-input:focus,
+.input:focus{
+    color:#000;
+}
+label.error{
+    float: left;
+    font-size: 10px;
+    font-weight: bold;
+    color:#F0F;
+}
+.submit{
+    margin-top:20px;
+    display: block;
+}
+#sent{
+    display:none;
+}

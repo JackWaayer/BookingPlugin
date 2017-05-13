@@ -1,0 +1,60 @@
+/* quick reset - may clash with other CSS code*/
+html,body{margin:0;padding:0;border:0;font-size:100%;height:100%}
+
+/* Alway use % instead of pixels to ensure corerct scaling - good for responsive sites 
+   use px for padding and margins only */
+#calendar { height: 100%;}
+
+/* Use CSS3 Flexbox for the calendar formatting - create a container and give it the ID   */
+/* Calendar weekly rows*/
+.th, .week { display: flex;   /* http://www.w3schools.com/css/css3_flexbox.asp */     
+			padding: 0 2px 2px 0; 
+			/* use em's (Relative to the font-size of the element) 
+			   to ensure correct scaling - especially on higher res/dpi screens */		
+			font: 0.9em/1.0em 'Calibri', sans-serif;} /* we need a smallish sized font to fit out calender */
+
+/* Make use of combinators (>child) to emulate our table
+	http://www.w3schools.com/css/css_combinators.asp */
+
+/* First row as header for day of the week*/
+.th>span {
+    border-bottom: 4px solid rgba(10,10,10,0.5); /* RGB dark grey with 50% (0.5) transparency */
+    padding: 0 2px 2px 0; /*top,right,bottom,left*/
+    text-align: right;
+    min-height: 25px;	
+}
+
+/* Subsequent rows for each week*/
+.week>div {
+    border-top: 1px solid #eee;
+    padding: 20px 2px 2px; /* 20px for the gap between the cell data and the top of the cell, 2px for the row gap */
+    min-height: 50px;
+    position: relative; 
+
+}
+
+/* general column spacing and color*/
+.th>span, .week>div {
+    width: 100%;
+    margin-right: 5px; /*make some column spacing */
+    color: #333;
+}
+
+/* Dates at the top right of the cell.
+	http://www.w3schools.com/cssref/sel_after.asp 
+	http://www.w3schools.com/cssref/pr_gen_content.asp	
+*/
+.week>div::after { 
+    content: attr(data-date);
+    display: block;
+    position: absolute;
+    top: 0; right: 2px;
+    color: #999;
+}
+
+/* Weekends shading
+   http://www.w3schools.com/cssref/sel_firstchild.asp 
+   http://www.w3schools.com/cssref/sel_last-child.asp
+*/
+.th>span:first-child, .th>span:last-child, .week>div:first-child, .week>div:last-child {background:#f0f0f0}
+.th>span:last-child, .week>div:last-child {margin-right:0}

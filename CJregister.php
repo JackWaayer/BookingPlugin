@@ -62,7 +62,7 @@ function CJ_register($data){
 		}
 		
 		
-		//need the users ID to link the account
+		//get the users ID to link the account
 		$qry = $wpdb->prepare('SELECT * FROM wp_users WHERE user_login = %s',$data['username']);
 		$user = $wpdb->get_results($qry);
 		

@@ -19,8 +19,8 @@ function CJ_my_profile() {
 	
 	CJ_list_bookings($account[0]->id);
 	
-	echo '<a href="?page_id='.$page_id.'&cmd=logout">Logout</a>';
-	echo '<a href="?page_id='.$page_id.'&cmd=calender"><button>Make a booking</button></a>';
+	echo '<a href="?page_id='.$page_id.'&cmd=logout"><button>Logout</button></a>';
+	echo '<a href="?page_id='.$page_id.'&cmd=makeBooking"><button>Make a booking</button></a>';
 	echo '<a href="?page_id='.$page_id.'&cmd=rooms"><button>View Rooms</button></a>';
 }
 
