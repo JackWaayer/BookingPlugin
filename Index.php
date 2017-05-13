@@ -146,7 +146,7 @@
 				CJ_login($data);
 				break;
 			case "register":
-				CJ_register($data);
+				$msg = CJ_register($data);
 				break;
 			case "logout":
 				CJ_logout();
@@ -164,9 +164,11 @@
 				//CJ_confirmation();
 				break;
 			default:
-				CJ_login(); //catch random commands
+				CJ_login($data); //catch random commands
 		}
-	} else CJ_list_rooms();	
+	} else CJ_login($data);
+
+	echo '<p>'.$msg.'</p>';
 }
 	
 	
