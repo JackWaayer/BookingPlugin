@@ -28,7 +28,7 @@ function CJ_my_profile() {
 
 function CJ_get_user_account(){
 	global $wpdb;
-	$uid = $_SESSION['uid'];
+	$uid = get_current_user_id();
 	$query = $wpdb->prepare("SELECT * FROM cj_account WHERE user_id = %s",$uid);
 	return $wpdb->get_results($query);
 	

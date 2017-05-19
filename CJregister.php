@@ -44,14 +44,11 @@ function CJ_register($data){
 		
 		
 		//insert user
-		if	(	$wpdb->insert('wp_users',
-						array(
-						'user_login'=>($data['username']),
-						'user_pass'=>($data['password']),
-						'user_email'=>($data['email']),
-						'user_status'=>1),
-						array( '%s', '%s', '%s', '%s' )
-						)
+		if	(	wp_create_user(
+					$data['username'],
+					$data['password'],
+					$data['email']
+				)
 			)
 		{
 			$insertUser = true;

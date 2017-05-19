@@ -14,15 +14,14 @@ if (!function_exists('pr')) {
 function CJ_list_bookings($accountID){
 	
 	global $wpdb, $page_id;
-	$status = $_SESSION['user_status'];
-	
-	if($status == 0){
+
+	if (current_user_can('manage_options')) {  //administrator capabilities
 		$query = $wpdb->prepare("SELECT * FROM cj_booking");
-	}
-	else if($status == 1){
+	}  
+    else if (current_user_can('read'))  { // subscriber capabilities
 		$query = $wpdb->prepare("SELECT * FROM cj_booking WHERE account_id = %s",$accountID);
 	}
-	else{
+    else if (!is_user_logged_in()) { //no capabilities or not logged in
 		$query = "";
 	}
 	
@@ -52,7 +51,7 @@ function CJ_list_bookings($accountID){
 
 
 function CJ_make_booking(){
-	global $wpdb, $page_id;
+	global $page_id;
 	$rooms = CJ_get_all_rooms();
 	
 	echo '<h1>Make a booking</h1>';

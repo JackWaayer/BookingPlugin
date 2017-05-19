@@ -27,6 +27,7 @@
 	require_once __DIR__ . '/CJbooking.php';
 	require_once __DIR__ . '/CJmy_profile.php';
 	require_once __DIR__ . '/CJregister.php';
+	require_once __DIR__ . '/CJhome.php';
 	
 
 
@@ -127,6 +128,25 @@
 	if (!function_exists('pr')) {
 	  function pr($var) { echo '<pre>'; var_dump($var); echo '</pre>';}
 	}
+
+
+
+
+	//index html
+	function set_html_temp(){
+		echo '
+		<div id=menu style="float: left; height: 100vh;">
+			<ul style="list-style:none;">
+				<li><a href="?page_id='.$page_id.'&cmd=home"><button>Home</button></a></li>
+				<li><a href="?page_id='.$page_id.'&cmd=rooms"><button>Rooms</button></a></li>
+				<li><a href="?page_id='.$page_id.'&cmd=makeBooking"><button>Booking</button></a></li>
+				<li><a href="?page_id='.$page_id.'&cmd=myProfile"><button>Profile</button></a></li>
+				<li><a href="?page_id='.$page_id.'&cmd=login"><button>Login</button></a></li>
+				<li><a href="?page_id='.$page_id.'&cmd=logout"><button>Logout</button></a></li>
+			</ul>
+		</div>
+		';
+	}
 	
 	
 	//Basic routing
@@ -134,6 +154,8 @@
 	function myRoute(){
     global $page_id; //required to determine the currently active page
     global $wpdb;
+
+	set_html_temp();
 
     //parse any incoming actions or commands from our page - can be placed in it's own function
 	if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
@@ -143,6 +165,9 @@
         /*Diagnostics
 		pr($data);*/
 		switch ($cmd) {
+			case "home":
+				CJ_home();
+				break;
 			case "myProfile":
 				CJ_my_profile();
 				break;
@@ -153,10 +178,9 @@
 				$msg = CJ_register($data);
 				break;
 			case "logout":
-				CJ_logout();
-				break;
-			case "logoutSuccess":
-				CJ_logout_success();
+				wp_logout();
+				$msg = 'You have been logged out!';
+				CJ_login($data);
 				break;
 			case "rooms":
 				CJ_list_rooms();
@@ -168,9 +192,9 @@
 				//CJ_confirmation();
 				break;
 			default:
-				CJ_login($data); //catch random commands
+				CJ_home(); //catch random commands
 		}
-	} else CJ_login($data);
+	} else CJ_home();
 
 	echo '<p>'.$msg.'</p>';
 }
