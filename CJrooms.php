@@ -51,9 +51,7 @@ function CJ_list_rooms() {
     }
     $buffer .= '</table>';
     echo $buffer;
-	
-	echo '<a href="?page_id='.$page_id.'&cmd=myProfile"><button>Return to Profile</button></a>';
-	echo '<a href="?page_id='.$page_id.'&cmd=calender"><button>Make a booking</button></a>';
+
 }
 
 

@@ -36,8 +36,21 @@
 	$CJ_dbversion = "0.4";
 	
 	
-	//Calendar css
-	wp_enqueue_style( 'WAD2016', plugins_url('css/calendar.css',__FILE__));
+	add_action( 'wp_enqueue_scripts', 'WAD_load_scripts' );
+	function WAD_load_scripts() {	
+		//Bootstrap
+		wp_register_style('prefix_bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+		wp_enqueue_style('prefix_bootstrap');
+
+		//add in jquery for the AJAX
+		wp_enqueue_style( 'jquery-ui', plugins_url('css/jquery-ui.css',__FILE__));	
+		wp_enqueue_script( 'jquery' );
+		wp_enqueue_script( 'jquery-ui-datepicker');
+		wp_enqueue_script( 'jquery_validate',plugins_url('js/jquery.validate.js',__FILE__) );
+		wp_enqueue_script( 'jquery_forms',plugins_url('js/jquery.form.js',__FILE__) );
+		wp_enqueue_script( 'json2' ); //required for AJAX to work with JSON	
+	}
+	
 	
 	
 	
@@ -48,6 +61,7 @@
 		global $CJ_dbversion;
 		if (get_site_option('CJ_dbversion') != $CJ_dbversion) CJ_booking_install();  
 	}
+
 	
 	//install or retrieve the latest database version 
 	function CJ_booking_install () {
@@ -132,84 +146,91 @@
 
 
 
-	//index html
-	function set_html_temp(){
-		echo '
-		<div id=menu style="float: left; height: 100vh;">
-			<ul style="list-style:none;">
-				<li><a href="?page_id='.$page_id.'&cmd=home"><button>Home</button></a></li>
-				<li><a href="?page_id='.$page_id.'&cmd=rooms"><button>Rooms</button></a></li>
-				<li><a href="?page_id='.$page_id.'&cmd=makeBooking"><button>Booking</button></a></li>
-				<li><a href="?page_id='.$page_id.'&cmd=myProfile"><button>Profile</button></a></li>
-				<li><a href="?page_id='.$page_id.'&cmd=login"><button>Login</button></a></li>
-				<li><a href="?page_id='.$page_id.'&cmd=logout"><button>Logout</button></a></li>
-			</ul>
-		</div>
-		';
-	}
 	
 	
 	//Basic routing
 	add_shortcode('plugin', 'myRoute');
 	function myRoute(){
-    global $page_id; //required to determine the currently active page
-    global $wpdb;
+		global $page_id; //required to determine the currently active page
+		global $wpdb;
 
-	set_html_temp();
+		set_html_temp();
+		
+		//parse any incoming actions or commands from our page - can be placed in it's own function
+		if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
+			$cmd = $_GET['cmd'];
+			$msg = $_GET['msg'];
+			$data = $_POST;
+			/*Diagnostics
+			pr($data);*/
+			switch ($cmd) {
+				case "home":
+					CJ_home();
+					break;
+				case "myProfile":
+					CJ_my_profile();
+					break;
+				case "login":
+					CJ_login($data);
+					break;
+				case "register":
+					$msg = CJ_register($data);
+					break;
+				case "logout":
+					wp_logout();
+					$msg = '<h2>You have been logged out!</h2>';
+					CJ_login($data);
+					break;
+				case "rooms":
+					CJ_list_rooms();
+					break;
+				case "makeBooking":
+					CJ_make_booking();
+					break;
+				case "confirmation":
+					//CJ_confirmation();
+					break;
+				default:
+					CJ_home(); //catch random commands
+			}
+		} else CJ_home();
 
-    //parse any incoming actions or commands from our page - can be placed in it's own function
-	if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
-		$cmd = $_GET['cmd'];
-		$msg = $_GET['msg'];
-		$data = $_POST;
-        /*Diagnostics
-		pr($data);*/
-		switch ($cmd) {
-			case "home":
-				CJ_home();
-				break;
-			case "myProfile":
-				CJ_my_profile();
-				break;
-			case "login":
-				CJ_login($data);
-				break;
-			case "register":
-				$msg = CJ_register($data);
-				break;
-			case "logout":
-				wp_logout();
-				$msg = 'You have been logged out!';
-				CJ_login($data);
-				break;
-			case "rooms":
-				CJ_list_rooms();
-				break;
-			case "makeBooking":
-				CJ_make_booking();
-				break;
-			case "confirmation":
-				//CJ_confirmation();
-				break;
-			default:
-				CJ_home(); //catch random commands
-		}
-	} else CJ_home();
+		
 
-	echo '<p>'.$msg.'</p>';
-}
+		echo '<p>'.$msg.'</p>';
+	}
 	
 	
 	
-	
+	//index html
+	function set_html_temp(){
+		echo '
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<ul class="nav navbar-nav" style="height: 10px;">
+					<li><a href="?page_id='.$page_id.'&cmd=home">Home</a></li>
+					<li><a href="?page_id='.$page_id.'&cmd=rooms">Rooms</a></li>
+					<li><a href="?page_id='.$page_id.'&cmd=makeBooking">Booking</a></li>';
+					
+					if(is_user_logged_in()){
+					echo '
+					<li><a href="?page_id='.$page_id.'&cmd=myProfile">Profile</a></li>
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="?page_id='.$page_id.'&cmd=logout"><span class="glyphicon glyphicon-log-out">Logout</a></li>
+					</ul>';
+					}
+					else if(!is_user_logged_in()){
+					echo '
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="?page_id='.$page_id.'&cmd=register"><span class="glyphicon glyphicon-user"></span> Register</a></li>
+						<li><a href="?page_id='.$page_id.'&cmd=login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+					</ul>';
+					}
 
-	/*	Runs when the template calls the wp_head() function. 
-		This hook is generally placed near the top of a page template between <head> and </head>. 
-		This hook does not take any parameters. */
-	//	http://codex.wordpress.org/Plugin_API/Action_Reference/wp_head
-	add_action('wp_head','headerHook');
-	function headerHook() {
-		//Client specific header details e.g.(js / css scripts)
+			echo '</ul>
+			</div>
+		</nav>
+		';
 	}
 
 

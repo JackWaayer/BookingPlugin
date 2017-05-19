@@ -22,9 +22,6 @@ function CJ_login_form(){
             </form>
             <br />
             <br />';
-
-
-    echo '<a href="?page_id='.$page_id.'&cmd=register">Register</a>';
 }
 
 

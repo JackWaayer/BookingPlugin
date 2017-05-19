@@ -9,20 +9,20 @@ if (!function_exists('pr')) {
 }
 
 
-
+wp_enqueue_style( 'bookingCalender', plugins_url('css/calendar.css',__FILE__));
 
 function CJ_list_bookings($accountID){
 	
 	global $wpdb, $page_id;
 
 	if (current_user_can('manage_options')) {  //administrator capabilities
-		$query = $wpdb->prepare("SELECT * FROM cj_booking");
+		$query = "SELECT * FROM cj_booking";
 	}  
     else if (current_user_can('read'))  { // subscriber capabilities
 		$query = $wpdb->prepare("SELECT * FROM cj_booking WHERE account_id = %s",$accountID);
 	}
     else if (!is_user_logged_in()) { //no capabilities or not logged in
-		$query = "";
+		return;
 	}
 	
 	

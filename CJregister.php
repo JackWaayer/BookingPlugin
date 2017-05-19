@@ -36,8 +36,6 @@ function CJ_register($data){
 	
 	CJ_register_form();
 	
-	echo '<a href="?page_id='.$page_id.'&cmd=login"><button>Login</button></a>';
-	
 	if (isset($data['first_name'])){
 		
 		//Validate data in $data
