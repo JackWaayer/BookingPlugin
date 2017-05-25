@@ -28,6 +28,7 @@
 	require_once __DIR__ . '/CJmy_profile.php';
 	require_once __DIR__ . '/CJregister.php';
 	require_once __DIR__ . '/CJhome.php';
+	//require_once __DIR__ . '/CJdash_index.php';
 	
 
 
@@ -153,8 +154,9 @@
 	function myRoute(){
 		global $page_id; //required to determine the currently active page
 		global $wpdb;
-
+		
 		set_html_temp();
+		
 		
 		//parse any incoming actions or commands from our page - can be placed in it's own function
 		if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
@@ -204,34 +206,42 @@
 	
 	//index html
 	function set_html_temp(){
+		
 		echo '
 		<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
-				<ul class="nav navbar-nav" style="height: 10px;">
+				<ul class="nav navbar-nav" style="height: 20px;">
 					<li><a href="?page_id='.$page_id.'&cmd=home">Home</a></li>
 					<li><a href="?page_id='.$page_id.'&cmd=rooms">Rooms</a></li>
 					<li><a href="?page_id='.$page_id.'&cmd=makeBooking">Booking</a></li>';
 					
 					if(is_user_logged_in()){
 					echo '
-					<li><a href="?page_id='.$page_id.'&cmd=myProfile">Profile</a></li>
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="?page_id='.$page_id.'&cmd=logout"><span class="glyphicon glyphicon-log-out">Logout</a></li>
-					</ul>';
+						<li id="loggedInTab"><a href="?page_id='.$page_id.'&cmd=myProfile">Profile</a></li>
+					</ul>
+						<ul id="loggedInTab" class="nav navbar-nav navbar-right" style="height: 20px;">
+							<li><a href="?page_id='.$page_id.'&cmd=logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+						</ul>
+					';
 					}
 					else if(!is_user_logged_in()){
 					echo '
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="?page_id='.$page_id.'&cmd=register"><span class="glyphicon glyphicon-user"></span> Register</a></li>
-						<li><a href="?page_id='.$page_id.'&cmd=login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-					</ul>';
+					</ul>
+						<ul class="nav navbar-nav navbar-right" style="height: 20px;">
+							<li><a href="?page_id='.$page_id.'&cmd=register"><span class="glyphicon glyphicon-user"></span> Register</a></li>
+							<li><a href="?page_id='.$page_id.'&cmd=login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+						</ul>';
 					}
 
-			echo '</ul>
+			echo '
 			</div>
 		</nav>
 		';
+		
+		//public bool DOMDocument::loadHTML ( string $source [, int $options = 0 ] )
 	}
+	
+	
 
 
 
