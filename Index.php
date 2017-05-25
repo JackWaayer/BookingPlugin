@@ -28,6 +28,7 @@
 	require_once __DIR__ . '/CJmy_profile.php';
 	require_once __DIR__ . '/CJregister.php';
 	require_once __DIR__ . '/CJhome.php';
+	//require_once __DIR__ . '/CJdash_index.php';
 	
 
 
@@ -153,8 +154,9 @@
 	function myRoute(){
 		global $page_id; //required to determine the currently active page
 		global $wpdb;
-
+		
 		set_html_temp();
+		
 		
 		//parse any incoming actions or commands from our page - can be placed in it's own function
 		if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
@@ -204,6 +206,7 @@
 	
 	//index html
 	function set_html_temp(){
+		
 		echo '
 		<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
@@ -214,10 +217,10 @@
 					
 					if(is_user_logged_in()){
 					echo '
-						<li><a href="?page_id='.$page_id.'&cmd=myProfile">Profile</a></li>
+						<li id="loggedInTab"><a href="?page_id='.$page_id.'&cmd=myProfile">Profile</a></li>
 					</ul>
-						<ul class="nav navbar-nav navbar-right" style="height: 20px;">
-							<li><a href="?page_id='.$page_id.'&cmd=logout"><span class="glyphicon glyphicon-log-out"> Logout</a></li>
+						<ul id="loggedInTab" class="nav navbar-nav navbar-right" style="height: 20px;">
+							<li><a href="?page_id='.$page_id.'&cmd=logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 						</ul>
 					';
 					}
@@ -234,7 +237,11 @@
 			</div>
 		</nav>
 		';
+		
+		//public bool DOMDocument::loadHTML ( string $source [, int $options = 0 ] )
 	}
+	
+	
 
 
 
