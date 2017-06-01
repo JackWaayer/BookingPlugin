@@ -11,17 +11,19 @@
 //master CRUD selector
 function CJ_admin1_CRUD() {
 
- //--- some basic debugging for information purposes only
-	echo '<h3>Contents of the POST data</h3>';
-	pr($_POST); //show the contents of the HTTP POST response from a new/edit command from the form
-	echo '<h3>Contents of the GET data</h3>';
-	pr($_GET);	 //show the contents of any variables made with a GET HTTP request
-//--- end of basic debugging  
-
-
 ?> 
-<h1>DEMO PAGE FOR ADMIN_PAGE_1</H1>
-<h2>Example URLs for use in the CRUD </h2>
+<h1>Rooms</H1>
+
+<h2>Add new room</h2>
+<form id = "addNewRoom">
+	<p>Room Name<p/><input type = "text" minlength = "5" maxlength = "40"></input>
+	<p>Room Description<p/><input type = "text" min = "0" maxlength = "300"></input>
+	<p>Room Price<p/><input type = "number" min = "0" max = "100000"</input><br>
+  	<button> Confirm </button>
+  	<button> Cancel </button>
+</form>
+
+<h2>Current Rooms</h2>
 <ul>
     <li><a href="?page=admin_page_1&command=new" class="add-new-h2">Add New record</a></li>
     <li><a href="?page=admin_page_1&command=view" class="add-new-h2">View single</a></li>
@@ -30,9 +32,27 @@ function CJ_admin1_CRUD() {
     <li><a href="?page=admin_page_1&command=update" class="add-new-h2">Update after edit</a></li>
     <li><a href="?page=admin_page_1&command=insert" class="add-new-h2">Insert after new</a></li>
    
-</ul>   
+</ul> 
 
-Remember to remove this code when you are finished. Refer to CJ8faq.php for the actual CRUD code
+  	<table>
+    	<tr>
+     		<th>Name</th>   
+	  		<th>Description</th/>
+      		<th>Price</th>
+ 			<th>CRUD</th>
+		</tr>  
+		<tr>
+   			<td></td>
+  			<td></td>
+  			<td></td>
+  			<td>
+    			<button>Edit</button>
+            	<button>Delete</button>
+        	</td>
+        </tr>
+    </table> 
+
+
 <?php
 	echo  '<div id="msg" style="overflow: auto"></div>
 		   <div class="wrap">

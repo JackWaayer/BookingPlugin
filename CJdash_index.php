@@ -105,10 +105,14 @@ function CJ_plugin_menu() {
 	add_options_page('CJ menu Options', 'CJ menu options', 'read', 'CJdash_indexoptions', 'CJ_plugin_options');		
 }
 
+// HTML/Page Content
 function CJ_plugin_main() {
 	echo '<h1>CJ Booking Plugin</h1>';
+	echo '<h2> What is this? </h2>';
 	echo '<p>This menu is for the management of the booking plugin</p>';
-	echo '<p>The Sub-Menus allow changes by acting as a GUI for the Database.  </p>';
+	echo '<p>This is a single page application, for management of a hotel/motel booking system. The Sub-Menus allow changes by acting as a GUI for the Database.  </p>';
+	echo '<h2> How do i use it?</h2>';
+	echo '<p>To use this pluging: Navagate to the page you wish to be used as the booking system, and add the shortcode [plugin] </p>';
 }
 
 function CJ_plugin_options() {
