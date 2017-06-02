@@ -155,7 +155,6 @@
 		global $page_id; //required to determine the currently active page
 		global $wpdb;
 		
-		set_html_temp();
 		
 		
 		//parse any incoming actions or commands from our page - can be placed in it's own function
@@ -163,6 +162,10 @@
 			$cmd = $_GET['cmd'];
 			$msg = $_GET['msg'];
 			$data = $_POST;
+
+			if($cmd != "logout"){
+				set_html_temp();
+			}
 			/*Diagnostics
 			pr($data);*/
 			switch ($cmd) {
@@ -180,7 +183,9 @@
 					break;
 				case "logout":
 					wp_logout();
+					wp_set_current_user(0);
 					$msg = '<h2>You have been logged out!</h2>';
+					set_html_temp();
 					CJ_login($data);
 					break;
 				case "rooms":
@@ -208,6 +213,12 @@
 	function set_html_temp(){
 		
 		echo '
+		<script>
+			function hideLogout()
+			{
+				document.getElementById("logoutTab").style.visibility="hidden";
+			}
+		</script>
 		<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
 				<ul class="nav navbar-nav" style="height: 20px;">
@@ -217,9 +228,9 @@
 					
 					if(is_user_logged_in()){
 					echo '
-						<li id="loggedInTab"><a href="?page_id='.$page_id.'&cmd=myProfile">Profile</a></li>
+						<li><a href="?page_id='.$page_id.'&cmd=myProfile">Profile</a></li>
 					</ul>
-						<ul id="loggedInTab" class="nav navbar-nav navbar-right" style="height: 20px;">
+						<ul class="nav navbar-nav navbar-right" style="height: 20px;">
 							<li><a href="?page_id='.$page_id.'&cmd=logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 						</ul>
 					';
@@ -237,8 +248,6 @@
 			</div>
 		</nav>
 		';
-		
-		//public bool DOMDocument::loadHTML ( string $source [, int $options = 0 ] )
 	}
 	
 	
