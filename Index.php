@@ -34,7 +34,7 @@
 
 
 	//Current database version for the Booking Plugin
-	$CJ_dbversion = "0.4";
+	$CJ_dbversion = "0.5";
 	
 	
 	add_action( 'wp_enqueue_scripts', 'WAD_load_scripts' );
@@ -73,13 +73,12 @@
 		if ($CJ_dbversion > $currentversion) { //version still good?
 			if($wpdb->get_var("show tables like 'CJ_booking'") != 'CJ_booking') {//check if the table already exists
 		
-				$sql = 'CREATE TABLE CJ_booking (
+				$sql = '
+				CREATE TABLE CJ_booking (
 				id int(11) NOT NULL auto_increment,
 				account_id int(11) NOT NULL,
 				room_id int(11) NOT NULL,
-				date_reserved date NOT NULL,
-				date_in date NOT NULL,
-				date_out date NOT NULL,
+				date_booked date NOT NULL,
 				type int(11) NOT NULL,
 				status int(11) NOT NULL,
 				PRIMARY KEY (id)
@@ -122,7 +121,8 @@
 				booking_id int(11) NOT NULL,
 				extra_id int(11) NOT NULL,
 				PRIMARY KEY (id)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8;';
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+				';
 
 				require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 				dbDelta($sql);
@@ -192,15 +192,15 @@
 					CJ_list_rooms();
 					break;
 				case "makeBooking":
-					CJ_make_booking();
-					break;
-				case "confirmation":
-					//CJ_confirmation();
+					CJ_booking_calendar($data);
 					break;
 				default:
 					CJ_home(); //catch random commands
 			}
-		} else CJ_home();
+		} else {
+			set_html_temp();
+			CJ_home();
+		}
 
 		
 
@@ -213,12 +213,6 @@
 	function set_html_temp(){
 		
 		echo '
-		<script>
-			function hideLogout()
-			{
-				document.getElementById("logoutTab").style.visibility="hidden";
-			}
-		</script>
 		<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
 				<ul class="nav navbar-nav" style="height: 20px;">
