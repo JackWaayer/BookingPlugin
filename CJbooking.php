@@ -188,7 +188,7 @@ function CJ_booking_calendar($data){
 						<?php
 					}else if($b->type == 1){
 						?>
-							<input type="checkbox" name="reservedSelectedDays" value=<?php echo $i+1 ?> style="margin-left: 10px;"> Reserved
+							<input type="checkbox" name="reservedSelectedDays[]" value=<?php echo $i+1 ?> style="margin-left: 10px;"> Reserved
 						<?php
 					}
 						
@@ -198,7 +198,7 @@ function CJ_booking_calendar($data){
 
 			if(!$booked){
 				?>
-					<input type="checkbox" name="selectedDays" value=<?php echo $i+1 ?> style="margin-left: 30px;">
+					<input type="checkbox" name="selectedDays[]" value=<?php echo $i+1 ?> style="margin-left: 30px;">
 				<?php
 			}
 				
@@ -213,24 +213,35 @@ function CJ_booking_calendar($data){
 			echo '<div data-date="'.$j++.'"></div>'; //!! this increments $j AFTER the value has been used
 	//close off the calendar	
 		echo '</div></main>';
-	}
 
-	?>
-		<p>*You may only book a reserved room.</p>
+		?>
+		<p style="font-size: 10px;">*You may only book a reserved room.</p>
+		<label>Please choose whether to book or reserve the selected dates:</label>
+		<br />
 			<input type="radio" name="type" value=0> Book
 			<br />
 			<input type="radio" name="type" value=1> Reserve
 			<br />
+			<br />
 
-			<button type="submit">Place Booking/Reservation</button>
+			<button type="submit" name="submit" value="submit">Place Booking/Reservation</button>
 		</form>
-	<?php
+		<?php
+	}
+
+	
 	
 }
 
 
 function CJ_confirm_booking($data){
-	
+	$type = $data["type"];
+	$selections = $data["selectedDays"];
+	$rSelections = $data["reservedSelectedDays"];
+
+	foreach($selections as $s){
+		echo $s.'<br />';
+	}
 }
 
 
