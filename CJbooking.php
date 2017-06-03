@@ -48,21 +48,29 @@ function CJ_list_bookings($accountID){
 	
 }
 
-
+$setDate = false;
 
 function CJ_make_booking(){
 	global $page_id;
 	$rooms = CJ_get_all_rooms();
 	
-	echo '<h1>Make a booking</h1>';
 	
-	$buffer = 	'<form method="POST">
-					<p>Please choose a room.</p>
+	?>
+
+	<h1>Make a booking</h1>
+
+				<form method="POST">
+					<p>Please choose a room and a month to view available bookings.</p>
+
 					<select name="selectRooms">
+						<option selected disabled>Choose Room</option>
 						<option value="Single Room">Single Room</option>
 						<option value="Executive Suite">Executive Suite</option>
 					</select>
+					<br />
+
 					<select name="chosenMonth">
+						<option selected disabled>Choose Month</option>
 						<option value=1>January</option>
 						<option value=2>February</option>
 						<option value=3>March</option>
@@ -76,12 +84,20 @@ function CJ_make_booking(){
 						<option value=11>November</option>
 						<option value=12>December</option>
 					</select>
-					<button type="Submit">Get Dates</button>
-				</form>';
-				
-	echo $buffer;
+					<br />
+
+					<select name="chosenYear">
+						<option selected value=2017>2017</option>
+						<option value=2018>2018</option>
+						<option value=2019>2019</option>
+						<option value=2020>2020</option>
+					</select>
+					<br />
+
+					<button type="Submit">View Bookings</button>
+				</form>
 	
-	
+	<?php
 }
 
 
@@ -97,9 +113,8 @@ function CJ_booking_calendar($data){
 		$query1 = $wpdb->prepare("SELECT id FROM cj_room WHERE room_name = %s",$formRoom);
 		$roomID = $wpdb->get_results($query1);
 
-		$query2 = $wpdb->prepare("SELECT date_booked FROM cj_booking WHERE room_id = %s",$roomID[0]->id);
+		$query2 = $wpdb->prepare("SELECT date_booked, type FROM cj_booking WHERE room_id = %s",$roomID[0]->id);
 		$bookings = $wpdb->get_results($query2);
-		echo $bookings[1]->date_booked;
 
 
 
@@ -130,7 +145,7 @@ function CJ_booking_calendar($data){
 
 	//calendar heading - note we are using flexbox for the styling
 		$thedate = date('F Y',mktime(0,0,1,$month,1,$year));
-		echo '<main id="calendar"><div>'.$thedate.'</div><div class="th">';
+		echo '<main id="calendar"><div><h3 style="text-align: center">'.$thedate.'</h3></div><div class="th">';
 		
 	//HEADING ROW: print out the week names	
 		foreach ($weekdays as $wd) {
@@ -158,8 +173,36 @@ function CJ_booking_calendar($data){
 	//print the actual day (cell) with events
 			echo '<div data-date="'.($i+1).'">'; //add 1 to the for loop variable as it starts at zero not one
 			//..... insert your event code and such here
+			$booked = false;
 
-			if (date("j") == $i+1)
+			?>
+				<form method="POST" action="?page_id='.$page_id.'&cmd=confirm">
+			<?php
+
+			foreach($bookings as $b){
+				$d = date_parse_from_format("Y-m-d", $b->date_booked);
+				if($d["month"] == $month && $d["day"] == $i+1){
+					if($b->type == 0){
+						?>
+							<p style="height: 5px; margin-left: 20px;">Booked</p>
+						<?php
+					}else if($b->type == 1){
+						?>
+							<input type="checkbox" name="reservedSelectedDays" value=<?php echo $i+1 ?> style="margin-left: 10px;"> Reserved
+						<?php
+					}
+						
+					$booked = true;
+				}
+			}
+
+			if(!$booked){
+				?>
+					<input type="checkbox" name="selectedDays" value=<?php echo $i+1 ?> style="margin-left: 30px;">
+				<?php
+			}
+				
+			if (date("j") == $i+1 && $month == date('n'))
 			echo "TODAY";
 			echo '</div>';
 		}
@@ -171,10 +214,24 @@ function CJ_booking_calendar($data){
 	//close off the calendar	
 		echo '</div></main>';
 	}
+
+	?>
+		<p>*You may only book a reserved room.</p>
+			<input type="radio" name="type" value=0> Book
+			<br />
+			<input type="radio" name="type" value=1> Reserve
+			<br />
+
+			<button type="submit">Place Booking/Reservation</button>
+		</form>
+	<?php
 	
 }
 
 
+function CJ_confirm_booking($data){
+	
+}
 
 
 ?>

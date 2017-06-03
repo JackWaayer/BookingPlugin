@@ -194,6 +194,9 @@
 				case "makeBooking":
 					CJ_booking_calendar($data);
 					break;
+				case "confirm":
+					CJ_confirm_booking($data);
+					break;
 				default:
 					CJ_home(); //catch random commands
 			}
