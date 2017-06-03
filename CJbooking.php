@@ -221,6 +221,10 @@ function CJ_booking_calendar($data){
 			<input type="radio" name="type" value=0> Book
 			<br />
 			<input type="radio" name="type" value=1> Reserve
+			<input type="text" name="month" value= <?php echo $month ?> style="visibility: hidden;" >
+			<input type="text" name="year" value= <?php echo $year ?> style="visibility: hidden;" >
+			<input type="text" name="roomName" value= '<?php echo $formRoom ?>' style="visibility: hidden;" >
+
 			<br />
 			<br />
 
@@ -235,13 +239,52 @@ function CJ_booking_calendar($data){
 
 
 function CJ_confirm_booking($data){
-	$type = $data["type"];
-	$selections = $data["selectedDays"];
-	$rSelections = $data["reservedSelectedDays"];
+	global $wpdb;
 
-	foreach($selections as $s){
-		echo $s.'<br />';
+	$type = $data["type"];
+	$selectedDays = $data["selectedDays"];
+	$selectedMonth = $data["month"];
+	$selectedYear = $data["year"];
+	$rSelections = $data["reservedSelectedDays"];
+	$room = $data['roomName'];
+
+	$qry = 'SELECT * FROM cj_extra';
+	$extras = $wpdb->get_results($qry);
+
+	echo '<h2>Add Extras</h2>';
+
+	if($type[0] == 0){
+		echo '<h5>Please confirm your booking dates and select any extras you wish to add</h5>';
+	}else{
+		echo '<h5>Please confirm your reservation dates and select any extras you wish to add</h5>';
 	}
+
+	echo '<ul>';
+	foreach($selectedDays as $s){
+		echo '<li style="height: 5px;">'.$room.' '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+	}
+	echo '</ul>';
+
+	echo '<br />';
+	echo '<h5>Select the extras you wish to add to your bookings/reservations:</h5>';
+
+	echo '<form method="POST" action="?page_id='.$page_id.'&cmd=payment">';
+	foreach($extras as $ex){
+		echo '<input type="checkbox" name="chosenExtras[]" value='.$ex->extra_name.'> 
+		<label style="display:inline-block; width: 20%">'.$ex->extra_name.'</label>   
+		<label style="display:inline-block; width: 20%">$'.$ex->price.'</label><br />';
+	}
+
+	echo '
+		<button type="submit" style="margin-left: 40%;">Continue</button>
+		<a href="?page_id='.$page_id.'&cmd=makeBooking"><button>Cancel</button></a>
+		</form>
+	';
+}
+
+
+function CJ_payment($data){
+	echo 'sdfhsfgh';
 }
 
 

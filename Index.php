@@ -197,6 +197,9 @@
 				case "confirm":
 					CJ_confirm_booking($data);
 					break;
+				case "payment":
+					CJ_payment($data);
+					break;
 				default:
 					CJ_home(); //catch random commands
 			}

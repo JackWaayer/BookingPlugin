@@ -23,3 +23,10 @@ insert into cj_booking (account_id, room_id, date_booked, status, type) values (
 insert into cj_booking (account_id, room_id, date_booked, status, type) values (2, 1, '2017-05-05', 2, 1);
 insert into cj_booking (account_id, room_id, date_booked, status, type) values (2, 2, '2017-05-05', 2, 1);
 
+
+insert into cj_extra (extra_name, price) values ('Parking space', 10.50);
+insert into cj_extra (extra_name, price) values ('Breakfast', 8.50);
+insert into cj_extra (extra_name, price) values ('Room with view', 15.00);
+insert into cj_extra (extra_name, price) values ('Baby utillites', 11.40);
+insert into cj_extra (extra_name, price) values ('Late checkout', 5.55);
+
