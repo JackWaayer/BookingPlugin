@@ -275,16 +275,39 @@ function CJ_confirm_booking($data){
 		<label style="display:inline-block; width: 20%">$'.$ex->price.'</label><br />';
 	}
 
-	echo '
-		<button type="submit" style="margin-left: 40%;">Continue</button>
-		<a href="?page_id='.$page_id.'&cmd=makeBooking"><button>Cancel</button></a>
+	?>
+		<input type="text" name="roomName" value= '<?php echo $room ?>' style="visibility: hidden;" >
+		<input type="text" name="selectedDays" value= '<?php echo $selectedDays ?>' style="visibility: hidden;" >
+		<input type="text" name="selectedMonth" value= '<?php echo $selectedMonth ?>' style="visibility: hidden;" >
+		<input type="text" name="selectedYear" value= '<?php echo $selectedYear ?>' style="visibility: hidden;" >
+		<input type="text" name="rSelections" value= '<?php echo $rSelections ?>' style="visibility: hidden;" >
+
+
+		<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Continue</button>
+		<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
 		</form>
-	';
+	<?php
 }
 
 
 function CJ_payment($data){
-	echo 'sdfhsfgh';
+	global $wpdb;
+
+	$qry = $wpdb->prepare('SELECT * FROM cj_room WHERE room_name = %s',$data['roomName']);
+	$oneRoom = $wpdb->get_results($qry); 
+
+	echo $data['selectedDays'];
+	$formatedDate = $data['selectedYear'].'/'.$data['selectedMonth'].'/'.$day;
+	echo $formatedDate;
+
+	/*$wpdb->insert('cj_booking',
+		array(
+			'account_id'->($oneRoom[0]->id),
+			'room_id'->($data),
+			'date_booked'->(),
+			'type'->(),
+			'status'->()
+		))*/
 }
 
 
