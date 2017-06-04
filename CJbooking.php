@@ -11,6 +11,9 @@ if (!function_exists('pr')) {
 
 wp_enqueue_style( 'bookingCalender', plugins_url('css/calendar.css',__FILE__));
 
+
+
+
 function CJ_list_bookings($accountID){
 	
 	global $wpdb, $page_id;
@@ -28,23 +31,45 @@ function CJ_list_bookings($accountID){
 	
 	$allrecs = $wpdb->get_results($query);
 	
-    $buffer = '<hr />
-                <table>
-                    <th>Room Name</th>
-					<th>Date Reserved</th>
-                    <th>Date In</th>
-                    <th>Date Out</th>';
+	?>
+    	<hr />
+		<table>
+			<th>Room Name</th>
+			<th>Room Description</th>
+			<th>Dates Booked/Reserved</th>
+			<th>type</th>
+			<th>Extras</th>
+	<?php
     foreach ($allrecs as $rec) {
-		$buffer .= '<tr>
-						<td>'.CJ_get_room($rec->room_id)[0]->room_name.'</td>
-						<td>'.$rec->date_reserved.'</td>
-						<td>'.$rec->date_in.'</td>
-						<td>'.$rec->date_out.'</td>
-					</tr>';	
+		$room = CJ_get_room($rec->room_id);
+		$bookingID = $rec->id;
+		
+		$qry1 = $wpdb->prepare('SELECT * FROM cj_booking_extra WHERE booking_id = %s',$bookingID);
+		$bookingExtra = $wpdb->get_results($qry1);
+	?>
+		<tr>
+			<td><?php echo $room[0]->room_name ?></td>
+			<td><?php echo $room[0]->description ?></td>
+			<td><?php echo $rec->date_booked ?></td>
+			<td><?php if($rec->type == "1"){echo "Reservation";}else if($rec->type == 0){echo "Booking";}  ?></td>
+			<td><?php foreach($bookingExtra as $extra){
+							$extraID = $extra->extra_id;
+							$qry2 = $wpdb->prepare('SELECT * FROM cj_extra WHERE id = %s',$extraID);
+							$oneExtra = $wpdb->get_results($qry2);
+							foreach($oneExtra as $oe){
+								echo $oe->extra_name;
+							}; ?> <br />
+					<?php
+					}
+					?>
+			</td>
+		</tr>
+	<?php	
     }
-    $buffer .= '</table>';
-    
-    echo $buffer;
+	?>
+    	</table>
+	<?php
+
 	
 }
 
@@ -237,6 +262,10 @@ function CJ_booking_calendar($data){
 function CJ_confirm_booking($data){
 	global $wpdb;
 
+	if(null!==($data['reservedSelectedDays']) && $data['type'] == 1){
+		header('Location:?page_id='.$page_id.'&cmd=makeBooking&msg=<h4>You may only book a reserved room</h4>');
+	}
+
 	$type = $data["type"];
 	$selectedDays = $data["selectedDays"];
 	$selectedMonth = $data["month"];
@@ -256,8 +285,15 @@ function CJ_confirm_booking($data){
 	}
 
 	echo '<ul>';
-	foreach($selectedDays as $s){
-		echo '<li style="height: 5px;">'.$room.' '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+	if(null !== $selectedDays){
+		foreach($selectedDays as $s){
+			echo '<li style="height: 5px;">'.$room.' '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+		}
+	}
+	if(null !== $rSelections){
+		foreach($rSelections as $rs){
+			echo '<li style="height: 5px;">'.$room.' '.$rs.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+		}
 	}
 	echo '</ul>';
 
@@ -271,10 +307,19 @@ function CJ_confirm_booking($data){
 		<label style="display:inline-block; width: 20%">$'.$ex->price.'</label><br />';
 	}
 
-	foreach($selectedDays as $s){
-		?>
-			<input type="hidden" name="days[]" value= <?php echo $s ?>>
-		<?php
+	if(null !== $selectedDays){
+		foreach($selectedDays as $s){
+			?>
+				<input type="hidden" name="days[]" value= <?php echo $s ?>>
+			<?php
+		}
+	}
+	if(null !== $rSelections){
+		foreach($rSelections as $rs){
+			?>
+				<input type="hidden" name="days[]" value= <?php echo $rs ?>>
+			<?php
+		}
 	}
 
 	?>
@@ -282,7 +327,6 @@ function CJ_confirm_booking($data){
 		<input type="hidden" name="type" value= <?php echo $type ?>>
 		<input type="hidden" name="selectedMonth" value= <?php echo $selectedMonth ?>>
 		<input type="hidden" name="selectedYear" value= <?php echo $selectedYear ?>>
-		<input type="hidden" name="rSelections" value= <?php echo $rSelections ?>>
 
 		<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Continue</button>
 		<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
@@ -291,109 +335,6 @@ function CJ_confirm_booking($data){
 }
 
 
-function CJ_payment($data){
-	global $wpdb;
-
-	$qry = $wpdb->prepare('SELECT * FROM cj_room WHERE id = %s',$data['roomID']);
-	$oneRoom = $wpdb->get_results($qry);
-	$total =0.00;
-
-	?>
-		<h1>Payment</h1>
-		<table>
-		<tr>
-			<th>Room</th>
-			<th>Date</th>
-			<th>Price</th>
-		</tr>
-		<?php
-		foreach($data["days"] as $key => $value){
-			$total = $total + $oneRoom[0]->price;
-			?>
-				<tr>
-					<td><?php echo $oneRoom[0]->room_name ?></td>
-					<td><?php echo $value.'/'.$data['selectedMonth'].'/'.$data['selectedYear'] ?></td>
-					<td><?php echo $oneRoom[0]->price ?></td>
-				</tr>
-			<?php
-		}
-	?>
-		</table>	
-
-		<br />
-		<br />
-
-		<table>
-		<tr>
-			<th>Extra</th>
-			<th>Price</th>
-		</tr>
-		<?php
-
-		foreach($data["chosenExtras"] as $value){
-			$query = $wpdb->prepare('SELECT * FROM cj_extra WHERE id = %s',$value);
-			$extra = $wpdb->get_results($query);
-			$total = $total + $extra[0]->price;
-			?>
-				<tr>
-					<td><?php echo $extra[0]->extra_name ?></td>
-					<td><?php echo $extra[0]->price ?></td>
-				</tr>
-			<?php
-		}
-	?>
-		</table>
-
-		<br />
-		<br />
-
-		<h3>Total: $<?php echo $total ?></h3>
-	<?php
-	
-
-	
-
-	?>
-		<button action=<?php foreach($data["days"] as $key => $value){
-							$formatedDate = $data['selectedYear'].'/'.$data['selectedMonth'].'/'.$value;
-							$currentUser = get_current_user_id();
-
-							$query = $wpdb->prepare('SELECT * FROM cj_account WHERE user_id = %s',$currentUser);
-							$account = $wpdb->get_results($query);
-
-							$wpdb->insert('cj_booking',
-								array(
-									'account_id'=>($account[0]->id),
-									'room_id'=>($data['roomID']),
-									'date_booked'=>($formatedDate),
-									'type'=>($data['type']),
-									'status'=>0),
-								array( '%s', '%s', '%s', '%s', '%s'));
-							
-							$qry = $wpdb->prepare('SELECT * FROM cj_booking WHERE date_booked = %s',$formatedDate);
-							$bookingID = $wpdb->get_results($qry);
-
-							foreach($data['chosenExtras'] as $value){
-								$wpdb->insert('cj_booking_extra',
-									array(
-										'booking_id'=>($bookingID[0]->id),
-										'extra_id'=>$value),
-									array( '%s', '%s'));
-							}
-						} 	
-					?> 
-		>Pay</button>
-	<?php
-
-	/*$wpdb->insert('cj_booking',
-		array(
-			'account_id'->($oneRoom[0]->id),
-			'room_id'->($data),
-			'date_booked'->(),
-			'type'->(),
-			'status'->()
-		))*/
-}
 
 
 ?>

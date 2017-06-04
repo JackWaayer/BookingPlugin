@@ -28,6 +28,7 @@
 	require_once __DIR__ . '/CJmy_profile.php';
 	require_once __DIR__ . '/CJregister.php';
 	require_once __DIR__ . '/CJhome.php';
+	require_once __DIR__ . '/CJpayment.php';
 	//require_once __DIR__ . '/CJdash_index.php';
 	
 
@@ -199,6 +200,9 @@
 					break;
 				case "payment":
 					CJ_payment($data);
+					break;
+				case "paymentInserts":
+					CJ_paymentInserts($data);
 					break;
 				default:
 					CJ_home(); //catch random commands
