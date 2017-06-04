@@ -64,8 +64,8 @@ function CJ_make_booking(){
 
 					<select name="selectRooms">
 						<option selected disabled>Choose Room</option>
-						<option value="Single Room">Single Room</option>
-						<option value="Executive Suite">Executive Suite</option>
+						<option value="1">Single Room</option>
+						<option value="2">Executive Suite</option>
 					</select>
 					<br />
 
@@ -101,19 +101,15 @@ function CJ_make_booking(){
 }
 
 
-
 function CJ_booking_calendar($data){
 	global $wpdb;
 
 	CJ_make_booking();
 	
 	if(isset($data["selectRooms"])){
-		$formRoom = $data["selectRooms"];
+		$roomID = $data["selectRooms"];
 
-		$query1 = $wpdb->prepare("SELECT id FROM cj_room WHERE room_name = %s",$formRoom);
-		$roomID = $wpdb->get_results($query1);
-
-		$query2 = $wpdb->prepare("SELECT date_booked, type FROM cj_booking WHERE room_id = %s",$roomID[0]->id);
+		$query2 = $wpdb->prepare("SELECT date_booked, type FROM cj_booking WHERE room_id = %s",$roomID);
 		$bookings = $wpdb->get_results($query2);
 
 
@@ -223,7 +219,7 @@ function CJ_booking_calendar($data){
 			<input type="radio" name="type" value=1> Reserve
 			<input type="text" name="month" value= <?php echo $month ?> style="visibility: hidden;" >
 			<input type="text" name="year" value= <?php echo $year ?> style="visibility: hidden;" >
-			<input type="text" name="roomName" value= '<?php echo $formRoom ?>' style="visibility: hidden;" >
+			<input type="text" name="roomID" value= <?php echo $roomID ?> style="visibility: hidden;" >
 
 			<br />
 			<br />
@@ -246,7 +242,7 @@ function CJ_confirm_booking($data){
 	$selectedMonth = $data["month"];
 	$selectedYear = $data["year"];
 	$rSelections = $data["reservedSelectedDays"];
-	$room = $data['roomName'];
+	$roomID = $data['roomID'];
 
 	$qry = 'SELECT * FROM cj_extra';
 	$extras = $wpdb->get_results($qry);
@@ -270,18 +266,23 @@ function CJ_confirm_booking($data){
 
 	echo '<form method="POST" action="?page_id='.$page_id.'&cmd=payment">';
 	foreach($extras as $ex){
-		echo '<input type="checkbox" name="chosenExtras[]" value='.$ex->extra_name.'> 
+		echo '<input type="checkbox" name="chosenExtras[]" value='.$ex->id.'> 
 		<label style="display:inline-block; width: 20%">'.$ex->extra_name.'</label>   
 		<label style="display:inline-block; width: 20%">$'.$ex->price.'</label><br />';
 	}
 
-	?>
-		<input type="text" name="roomName" value= '<?php echo $room ?>' style="visibility: hidden;" >
-		<input type="text" name="selectedDays" value= '<?php echo $selectedDays ?>' style="visibility: hidden;" >
-		<input type="text" name="selectedMonth" value= '<?php echo $selectedMonth ?>' style="visibility: hidden;" >
-		<input type="text" name="selectedYear" value= '<?php echo $selectedYear ?>' style="visibility: hidden;" >
-		<input type="text" name="rSelections" value= '<?php echo $rSelections ?>' style="visibility: hidden;" >
+	foreach($selectedDays as $s){
+		?>
+			<input type="hidden" name="days[]" value= <?php echo $s ?>>
+		<?php
+	}
 
+	?>
+		<input type="hidden" name="roomID" value= <?php echo $roomID ?>>
+		<input type="hidden" name="type" value= <?php echo $type ?>>
+		<input type="hidden" name="selectedMonth" value= <?php echo $selectedMonth ?>>
+		<input type="hidden" name="selectedYear" value= <?php echo $selectedYear ?>>
+		<input type="hidden" name="rSelections" value= <?php echo $rSelections ?>>
 
 		<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Continue</button>
 		<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
@@ -293,12 +294,96 @@ function CJ_confirm_booking($data){
 function CJ_payment($data){
 	global $wpdb;
 
-	$qry = $wpdb->prepare('SELECT * FROM cj_room WHERE room_name = %s',$data['roomName']);
-	$oneRoom = $wpdb->get_results($qry); 
+	$qry = $wpdb->prepare('SELECT * FROM cj_room WHERE id = %s',$data['roomID']);
+	$oneRoom = $wpdb->get_results($qry);
+	$total =0.00;
 
-	echo $data['selectedDays'];
-	$formatedDate = $data['selectedYear'].'/'.$data['selectedMonth'].'/'.$day;
-	echo $formatedDate;
+	?>
+		<h1>Payment</h1>
+		<table>
+		<tr>
+			<th>Room</th>
+			<th>Date</th>
+			<th>Price</th>
+		</tr>
+		<?php
+		foreach($data["days"] as $key => $value){
+			$total = $total + $oneRoom[0]->price;
+			?>
+				<tr>
+					<td><?php echo $oneRoom[0]->room_name ?></td>
+					<td><?php echo $value.'/'.$data['selectedMonth'].'/'.$data['selectedYear'] ?></td>
+					<td><?php echo $oneRoom[0]->price ?></td>
+				</tr>
+			<?php
+		}
+	?>
+		</table>	
+
+		<br />
+		<br />
+
+		<table>
+		<tr>
+			<th>Extra</th>
+			<th>Price</th>
+		</tr>
+		<?php
+
+		foreach($data["chosenExtras"] as $value){
+			$query = $wpdb->prepare('SELECT * FROM cj_extra WHERE id = %s',$value);
+			$extra = $wpdb->get_results($query);
+			$total = $total + $extra[0]->price;
+			?>
+				<tr>
+					<td><?php echo $extra[0]->extra_name ?></td>
+					<td><?php echo $extra[0]->price ?></td>
+				</tr>
+			<?php
+		}
+	?>
+		</table>
+
+		<br />
+		<br />
+
+		<h3>Total: $<?php echo $total ?></h3>
+	<?php
+	
+
+	
+
+	?>
+		<button action=<?php foreach($data["days"] as $key => $value){
+							$formatedDate = $data['selectedYear'].'/'.$data['selectedMonth'].'/'.$value;
+							$currentUser = get_current_user_id();
+
+							$query = $wpdb->prepare('SELECT * FROM cj_account WHERE user_id = %s',$currentUser);
+							$account = $wpdb->get_results($query);
+
+							$wpdb->insert('cj_booking',
+								array(
+									'account_id'=>($account[0]->id),
+									'room_id'=>($data['roomID']),
+									'date_booked'=>($formatedDate),
+									'type'=>($data['type']),
+									'status'=>0),
+								array( '%s', '%s', '%s', '%s', '%s'));
+							
+							$qry = $wpdb->prepare('SELECT * FROM cj_booking WHERE date_booked = %s',$formatedDate);
+							$bookingID = $wpdb->get_results($qry);
+
+							foreach($data['chosenExtras'] as $value){
+								$wpdb->insert('cj_booking_extra',
+									array(
+										'booking_id'=>($bookingID[0]->id),
+										'extra_id'=>$value),
+									array( '%s', '%s'));
+							}
+						} 	
+					?> 
+		>Pay</button>
+	<?php
 
 	/*$wpdb->insert('cj_booking',
 		array(
