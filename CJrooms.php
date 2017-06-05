@@ -37,20 +37,25 @@ function CJ_list_rooms() {
     $query = "SELECT * FROM cj_room";
     $allrecs = $wpdb->get_results($query);
 	
-    $buffer = '<hr />
-                <table>
-                    <th>Room Name</th>
-                    <th>Desription</th>
-                    <th>Price</th>';
+    ?>
+    <hr />
+        <table>
+            <th>Room Name</th>
+            <th>Desription</th>
+            <th>Price</th>
+    <?php
     foreach ($allrecs as $rec) {
-		$buffer .= '<tr>
-						<td>'.$rec->room_name.'</td>
-						<td>'.$rec->description.'</td>
-						<td>'.$rec->price.'</td>
-					</tr>';	
+		?>
+        <tr>
+            <td><?php echo $rec->room_name ?></td>
+            <td><?php echo $rec->description ?></td>
+            <td><?php echo $rec->price ?></td>
+        </tr>
+    <?php
     }
-    $buffer .= '</table>';
-    echo $buffer;
+    ?>
+    </table>
+    <?php
 
 }
 

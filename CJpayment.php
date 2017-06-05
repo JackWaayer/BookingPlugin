@@ -83,10 +83,10 @@ function CJ_payment($data){
     }
     
     ?>
-		<input type="hidden" name="roomID" value= <?php echo $roomID ?>>
-		<input type="hidden" name="type" value= <?php echo $type ?>>
-		<input type="hidden" name="selectedMonth" value= <?php echo $selectedMonth ?>>
-		<input type="hidden" name="selectedYear" value= <?php echo $selectedYear ?>>
+		<input type="hidden" name="roomID" value= <?php echo $data['roomID'] ?>>
+		<input type="hidden" name="type" value= <?php echo $data['type'] ?>>
+		<input type="hidden" name="selectedMonth" value= <?php echo $data['selectedMonth'] ?>>
+		<input type="hidden" name="selectedYear" value= <?php echo $data['selectedYear'] ?>>
 
 		<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Confirm Payment</button>
 		<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
@@ -97,15 +97,60 @@ function CJ_payment($data){
 
 
 function CJ_paymentInserts($data){
+    global $wpdb;
+    $success = true;
+    
+
 	foreach($data['days'] as $day){
-        echo $day;
+        
+        $formattedDate = $data['selectedYear'].'/'.$data['selectedMonth'].'/'.$day;
+        $uid = get_current_user_id();
+
+        $qry1 = $wpdb->prepare('SELECT * FROM cj_account WHERE user_id = %s',$uid);
+        $account = $wpdb->get_results($qry1);
+
+        if(!
+        $wpdb->insert('cj_booking',
+				array(
+				'account_id'=>($account[0]->id),
+				'room_id'=>($data['roomID']),
+				'date_booked'=>($formattedDate),
+				'type'=>($data['type']),
+				'status'=>0),
+				array( '%s', '%s', '%s', '%s', '%s' ))
+        ){
+            $success = false;
+        }
+
+        $qry2 = $wpdb->prepare('SELECT * FROM cj_booking WHERE date_booked = %s',$formattedDate);
+        $booking = $wpdb->get_results($qry2);
+
+        if(null !== $data['chosenExtras']){
+            foreach($data['chosenExtras'] as $extra){
+                if(!
+                    $wpdb->insert('cj_booking_extra',
+                            array(
+                            'booking_id'=>($booking[0]->id),
+                            'extra_id'=>$extra),
+                            array( '%s', '%s' ))
+                ){
+                    $success = false;
+                }
+            }
+        }
+
+    }
+
+    if($success){
+        ?>
+            <h3 style='color:green; text-align:center;'>Payment Successful!</h3>
+        <?php
+    }else{
+        ?>
+            <h3 style='color:red; text-align:center;'>Something went terribly wrong.</h3>
+        <?php
     }
 }
 
-
-
-function CJ_paymentSuccess(){
-	
-}
 
 ?> 

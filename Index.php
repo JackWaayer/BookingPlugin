@@ -204,6 +204,9 @@
 				case "paymentInserts":
 					CJ_paymentInserts($data);
 					break;
+				case "removeBookings":
+					CJ_removeBooking($data);
+					break;
 				default:
 					CJ_home(); //catch random commands
 			}

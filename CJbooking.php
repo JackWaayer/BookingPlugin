@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 
 //simple variable debug function
@@ -39,6 +38,7 @@ function CJ_list_bookings($accountID){
 			<th>Dates Booked/Reserved</th>
 			<th>type</th>
 			<th>Extras</th>
+			<th></th>
 	<?php
     foreach ($allrecs as $rec) {
 		$room = CJ_get_room($rec->room_id);
@@ -63,17 +63,33 @@ function CJ_list_bookings($accountID){
 					}
 					?>
 			</td>
+			<form method="POST" action="?page_id=<?php echo $page_id ?> &cmd=removeBookings">
+			<td><input type='checkbox' name='deleteBooking[]' value=<?php echo $bookingID ?>></td>
 		</tr>
 	<?php	
     }
 	?>
     	</table>
+		<br />
+		<button class='btn btn-danger' type='submit' style=''>Delete</button>
+		</form>
 	<?php
 
 	
 }
 
-$setDate = false;
+
+function CJ_removeBooking($data){
+	global $wpdb;
+
+	foreach($data['deleteBooking'] as $del){
+		$results = $wpdb->query($wpdb->prepare("DELETE FROM cj_booking WHERE id=%s",$del));
+   		if ($results) {
+      		echo "<h3>Delete Success!</h3>";
+   		}
+	}
+}
+
 
 function CJ_make_booking(){
 	global $page_id;
@@ -87,15 +103,15 @@ function CJ_make_booking(){
 				<form method="POST">
 					<p>Please choose a room and a month to view available bookings.</p>
 
-					<select name="selectRooms">
-						<option selected disabled>Choose Room</option>
+					<select name="selectRooms" required>
+						<option value="" selected disabled>Choose Room</option>
 						<option value="1">Single Room</option>
 						<option value="2">Executive Suite</option>
 					</select>
 					<br />
 
-					<select name="chosenMonth">
-						<option selected disabled>Choose Month</option>
+					<select name="chosenMonth" required>
+						<option value="" selected disabled>Choose Month</option>
 						<option value=1>January</option>
 						<option value=2>February</option>
 						<option value=3>March</option>
@@ -111,7 +127,7 @@ function CJ_make_booking(){
 					</select>
 					<br />
 
-					<select name="chosenYear">
+					<select name="chosenYear" required>
 						<option selected value=2017>2017</option>
 						<option value=2018>2018</option>
 						<option value=2019>2019</option>
@@ -239,7 +255,7 @@ function CJ_booking_calendar($data){
 		<p style="font-size: 10px;">*You may only book a reserved room.</p>
 		<label>Please choose whether to book or reserve the selected dates:</label>
 		<br />
-			<input type="radio" name="type" value=0> Book
+			<input type="radio" name="type" value=0 checked="checked"> Book
 			<br />
 			<input type="radio" name="type" value=1> Reserve
 			<input type="text" name="month" value= <?php echo $month ?> style="visibility: hidden;" >
@@ -264,6 +280,9 @@ function CJ_confirm_booking($data){
 
 	if(null!==($data['reservedSelectedDays']) && $data['type'] == 1){
 		header('Location:?page_id='.$page_id.'&cmd=makeBooking&msg=<h4>You may only book a reserved room</h4>');
+	}
+	if(null == ($data['reservedSelectedDays']) && null == ($data['selectedDays'])){
+		header('Location:?page_id='.$page_id.'&cmd=makeBooking&msg=<h4>Please select at least one date to book/reserve.</h4>');
 	}
 
 	$type = $data["type"];
