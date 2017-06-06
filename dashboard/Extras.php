@@ -4,6 +4,8 @@ function WAD_editor2_CRUD() {
 
 ?>
 
+  <h1>Room Extras</H1>
+
   <h2>Add New Extra </h2>
   <form id = "addNewExtra">
   <p>Extra Type<p/><input type = "text" minlength = "5" maxlength = "40">
@@ -13,7 +15,13 @@ function WAD_editor2_CRUD() {
   <button> Cancel </button>
   </form>
 
-  <h1>Room Extras</H1>
+<?php
+
+  global $wpdb, $page_id;
+  $query = "SELECT * FROM cj_extra";
+  $allrecs = $wpdb->get_results($query);
+
+?>
   <h2>Current Extras</h2>
   <table>
           <tr>
@@ -22,8 +30,14 @@ function WAD_editor2_CRUD() {
             <th>Price</th>
             <th>CRUD</th>
           </tr>
+<?php
+  foreach ($allrecs as $rec) {
+  		$room = CJ_get_room($rec->room_id);
+  
+  
+?>
           <tr>
-            <td></td>
+            <td><?php echo $room[0]->room_name ?></td>
             <td></td>
             <td></td>
             <td>
@@ -31,11 +45,10 @@ function WAD_editor2_CRUD() {
               <button>Delete</button>
             </td>
           </tr>
+  }
+
         </table>
-
-
-  <?php
 }
-
-WAD_editor2_CRUD();
+<?php
+  WAD_editor2_CRUD();
 ?>

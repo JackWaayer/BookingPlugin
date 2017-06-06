@@ -13,7 +13,7 @@ function WAD_admin2_CRUD() {
     <p>Home Number<p/><input type = "number" min = "0" max = "999999999999"></input>
     <p>Mobile Number</p><input type = "number" min = "0" max = "999999999999"></input>
     <p>Email Address</p><input type = "email"></input>
-    <p>Password</p><input type = "password"></input>
+    <p>Password</p><input type = "password" minlength = "5" maxlength = "25"></input>
     <br><button> Confirm  </button>
     <button> Cancel </button>
   </form>

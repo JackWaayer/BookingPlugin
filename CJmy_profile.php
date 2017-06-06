@@ -19,6 +19,7 @@ function CJ_my_profile() {
 	
 	CJ_list_bookings($account[0]->id);
 	
+	echo '<p>Have a problem? <a href="?page_id='.$page_id.'&cmd=contact">Contact us</a> here!</p>';
 }
 
 

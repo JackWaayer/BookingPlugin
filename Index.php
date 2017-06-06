@@ -29,7 +29,8 @@
 	require_once __DIR__ . '/CJregister.php';
 	require_once __DIR__ . '/CJhome.php';
 	require_once __DIR__ . '/CJpayment.php';
-	//require_once __DIR__ . '/CJdash_index.php';
+	require_once __DIR__ . '/CJcontact.php';
+	require_once __DIR__ . '/CJdash_index.php';
 	
 
 
@@ -206,6 +207,9 @@
 					break;
 				case "removeBookings":
 					CJ_removeBooking($data);
+					break;
+				case "contact":
+					CJ_contact($data);
 					break;
 				default:
 					CJ_home(); //catch random commands

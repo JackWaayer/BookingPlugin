@@ -1,2 +1,2 @@
 # Booking-plugin
-web app development assignment
+Web Application Development | Assignment 2

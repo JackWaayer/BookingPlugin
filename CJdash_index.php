@@ -1,29 +1,5 @@
 <?php
-/*
-Plugin Name: CJ course - 16. Multiple file for a simple CRUD framework
-Plugin URI: http://localhost/
-Description: Demo plugin for the ITWD7.350 CJ course. This is plugin is a simple example demostrating how multiple files can be used for a plugin.
-Author: John Jamieson
-Version: 1.0
-Author URI: http://http://eitonline.eit.ac.nz/course/view.php?id=72/
-Last update: 19 May 2017
-*/
 
-/* DEBUGGING NOTE
- * Change the line 81 of the wp-config.php file in the Wordpress root folder
- * from 	define('WP_DEBUG', false);
- * to		define('WP_DEBUG', true);
- * This will enable the debugging and any error messages.
-*/
-/* CHANGELOG
-	19MAY2017 - Initial release.
-*/
-/*-------------------------------------------------------------------------------------------
- * Wordpress globals - http://codex.wordpress.org/User:CharlesClarkson/Global_Variables
- * 					 - http://codex.wordpress.org/Function_Reference
- * Database object - http://codex.wordpress.org/Class_Reference/wpdb
- * 				   - http://codex.wordpress.org/Database_Description
- -------------------------------------------------------------------------------------------*/
 //simple variable debug function
 //usage: pr($avariable);
 if (!function_exists('pr')) {
@@ -118,6 +94,7 @@ function CJ_plugin_main() {
 function CJ_plugin_options() {
 	echo '<h1>Plugin options page</h1>';
 	echo '<p>This page was called/accessed using the menu slug CJdash_indexoptions with the URL ?page=CJdash_indexoptions</p>';
+	echo 'To have the contact page useable, please install the "Contact Form 7" plugin (https://contactform7.com/) and create a form with the title "CJ_Contact"';
 }
 
 ?>
