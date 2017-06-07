@@ -100,7 +100,7 @@
 				id int(11) NOT NULL auto_increment,
 				room_name varchar(30) NOT NULL,
 				description varchar(30) NOT NULL,
-				price float(3,2) NOT NULL,
+				price float(5,2) NOT NULL,
 				PRIMARY KEY (id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 				

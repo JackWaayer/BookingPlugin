@@ -13,8 +13,9 @@ insert into cj_account (user_id, first_name, last_name, home_number, mobile_numb
 insert into cj_account (user_id, first_name, last_name, home_number, mobile_number) values (6, 'Adorne', 'McJerrow', '380-(478)378-3676', '58-(107)116-2136');
 
 
-insert into cj_room (room_name, description, price) values ('Single Room', 'This is a single room for one person', '160.00');
-insert into cj_room (room_name, description, price) values ('Executive Suite', 'This is one bad ass room', '275.50');
+insert into cj_room (room_name, description, price) values ('Single Room', 'This is a single room for one person.', '160.00');
+insert into cj_room (room_name, description, price) values ('Executive Suite', 'This is a very nice room for one or two people.', '275.50');
+insert into cj_room (room_name, description, price) values ('Double Room', 'This is a double room for one or two people.', '185.00');
 
 
 insert into cj_booking (account_id, room_id, date_booked, status, type) values (1, 1, '2017-05-11', 0, 0);
