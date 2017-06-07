@@ -36,7 +36,7 @@
 
 
 	//Current database version for the Booking Plugin
-	$CJ_dbversion = "0.5";
+	$CJ_dbversion = "0.7";
 	
 	
 	add_action( 'wp_enqueue_scripts', 'WAD_load_scripts' );
