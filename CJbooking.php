@@ -74,7 +74,7 @@ function CJ_list_bookings($accountID){
 		?>
 			</table>
 			<br />
-			<button class='btn btn-danger' type='submit' style=''>Delete</button>
+			<button class='btn btn-danger' type='submit' style='float: right;'>Delete Selected</button>
 			</form>
 		<?php
 	}else{
@@ -120,14 +120,13 @@ function CJ_make_booking(){
 				<form method="POST">
 					<h5>Please choose a room and a month to view available bookings.</h5>
 
-					<select name="selectRooms" required>
+					<select name="selectRooms" required style="display: block; width: 20%; margin: 5px 0;">
 						<option value="" selected disabled>Choose Room</option>
 						<option value="1">Single Room</option>
 						<option value="2">Executive Suite</option>
 					</select>
-					<br />
 
-					<select name="chosenMonth" required>
+					<select name="chosenMonth" required style="display: block; width: 20%; margin: 5px 0;">
 						<option value="" selected disabled>Choose Month</option>
 						<option value=1>January</option>
 						<option value=2>February</option>
@@ -142,9 +141,9 @@ function CJ_make_booking(){
 						<option value=11>November</option>
 						<option value=12>December</option>
 					</select>
-					<br />
 
-					<select name="chosenYear" required>
+
+					<select name="chosenYear" required style="display: block; width: 20%; margin: 5px 0;">
 						<option selected value=2017>2017</option>
 						<option value=2018>2018</option>
 						<option value=2019>2019</option>
@@ -152,7 +151,7 @@ function CJ_make_booking(){
 					</select>
 					<br />
 
-					<button type="Submit">View Bookings</button>
+					<button type="Submit" class="btn btn-info">View Calendar</button>
 				</form>
 	
 	<?php
@@ -282,7 +281,7 @@ function CJ_booking_calendar($data){
 			<br />
 			<br />
 
-			<button type="submit" name="submit" value="submit">Place Booking/Reservation</button>
+			<button type="submit" name="submit" value="submit" class="btn btn-primary">Place Booking/Reservation</button>
 		</form>
 		<?php
 	}
@@ -323,6 +322,9 @@ function CJ_confirm_booking($data){
 		$qry = 'SELECT * FROM cj_extra';
 		$extras = $wpdb->get_results($qry);
 
+		$qry2 = $wpdb->prepare('SELECT room_name FROM cj_room WHERE id = %s',$roomID);
+		$roomName = $wpdb->get_results($qry2);
+
 		echo '<h2>Add Extras</h2>';
 
 		if($type[0] == 0){
@@ -334,12 +336,12 @@ function CJ_confirm_booking($data){
 		echo '<ul>';
 		if(null !== $selectedDays){
 			foreach($selectedDays as $s){
-				echo '<li style="height: 5px;">'.$room.' '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+				echo '<li style="height: 5px;">Book the '.$roomName[0]->room_name.' on the '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
 			}
 		}
 		if(null !== $rSelections){
 			foreach($rSelections as $rs){
-				echo '<li style="height: 5px;">'.$room.' '.$rs.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+				echo '<li style="height: 5px;">Reserve the '.$roomName[0]->room_name.' on the '.$rs.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
 			}
 		}
 		echo '</ul>';
@@ -375,8 +377,8 @@ function CJ_confirm_booking($data){
 			<input type="hidden" name="selectedMonth" value= <?php echo $selectedMonth ?>>
 			<input type="hidden" name="selectedYear" value= <?php echo $selectedYear ?>>
 
-			<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Continue</button>
-			<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
+			<button type="submit" name="submit" value="submit" style="margin-left: 40%;" class="btn btn-primary">Continue</button>
+			<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button class="btn btn-info">Cancel</button></a>
 			</form>
 		<?php
 	}
