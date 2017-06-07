@@ -13,15 +13,17 @@ function CJ_register_form(){
 	
 	?>
 	<form action="" method="POST">
-		Username<input type="text" name="username" placeholder="e.g. George"><br />
-		Password<input type="password" name="password" placeholder="******"><br />
-		First Name<input type="text" name="first_name" placeholder=""><br />
-		Last Name<input type="text" name="last_name" placeholder=""><br />
-		Home Phone<input type="text" name="home_phone" placeholder=""><br />
-		Mobile Phone<input type="text" name="mobile_phone" placeholder=""><br />
-		Email<input type="text" name="email" placeholder="example@mail.com"><br />
-		<button type="submit">Sign Up</button>
+		<label style="display:inline-block; width: 25%">Username</label><input required type="text" name="username"><br />
+		<label style="display:inline-block; width: 25%">Password</label><input required type="password" name="password" placeholder="******"><br />
+		<label style="display:inline-block; width: 25%">Confirm Password</label><input required type="password" name="confirmPassword" placeholder="******"><br />
+		<label style="display:inline-block; width: 25%">First Name</label><input required type="text" name="first_name" placeholder=""><br />
+		<label style="display:inline-block; width: 25%">Last Name</label><input required type="text" name="last_name" placeholder=""><br />
+		<label style="display:inline-block; width: 25%">Home Phone</label><input required type="text" name="home_phone" placeholder="060000000"><br />
+		<label style="display:inline-block; width: 25%">Mobile Phone</label><input required type="text" name="mobile_phone" placeholder="0270000000"><br />
+		<label style="display:inline-block; width: 25%">Email</label><input required type="text" name="email" placeholder="example@mail.com"><br /><br />
+		<button type="submit" class="btn btn-info">Sign Up</button>
     </form>
+	<br />
 	<?php		
 	
 }
@@ -87,11 +89,11 @@ function CJ_register($data){
 		//success or error for insert
 		if($insertUser && $insertAccount)
 		{
-			$msg = '<h2 >Your account has been successfully created!</h2>';
+			$msg = '<div class="alert alert-success">Your account has been successfully created!</div>';
 		}
 		else
 		{
-			$msg = '<h2>Something went terribly wrong!</h2>';
+			$msg = '<div class="alert alert-danger">Something went terribly wrong!</div>';
 		}
 		
 		return $msg;
