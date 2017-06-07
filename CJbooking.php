@@ -111,7 +111,7 @@ function CJ_make_booking(){
 	<h1>Make a booking</h1>
 
 				<form method="POST">
-					<p>Please choose a room and a month to view available bookings.</p>
+					<h5>Please choose a room and a month to view available bookings.</h5>
 
 					<select name="selectRooms" required>
 						<option value="" selected disabled>Choose Room</option>
