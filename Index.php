@@ -198,7 +198,7 @@
 						CJ_login($data);
 					}
 					else{
-						CJ_home();
+						CJ_login($data);
 					}
 					break;
 				case "rooms":
