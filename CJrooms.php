@@ -107,7 +107,7 @@ function CJ_review($data){
     <h5>Write a review for <?php echo $roomName[0]->room_name ?></h5>
 
         <form method="POST">
-            <select name="rating" style="display: block; margin-bottom: 10px;">
+            <select name="rating" style="display: block; margin-bottom: 10px;" required>
                 <option value="" selected disabled>Choose rating</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -115,20 +115,19 @@ function CJ_review($data){
                 <option value="4">4</option>
                 <option value="5">5</option>
             </select>
-            <textarea rows=5 cols=60 name="review" placeholder="Write your review here..."></textarea>
+            <textarea required maxlength="500" rows=5 cols=60 name="review" placeholder="Write your review here..."></textarea>
             <input type="text" name="roomID" value="<?php echo $data['roomID'] ?>" style="visibility: hidden;">
             <button type="submit">Submit</button>
         </form>
+        <br />
     <?php
 
 
 
     if(isset($data['review']) && isset($data['rating'])){
         $uid = get_current_user_id();
-        echo $uid;
         $qry1 = $wpdb->prepare('SELECT id from cj_account WHERE user_id = %s',$uid);
         $accountID = $wpdb->get_results($qry1);
-        echo $accountID[0]->id;
         if(
             $wpdb->insert('cj_review',
 				array(
@@ -141,6 +140,8 @@ function CJ_review($data){
             ?>
                 <div class="alert alert-success">Review successfully submitted</div>
             <?php
+
+            
         }
     }
 
@@ -153,6 +154,30 @@ function CJ_review($data){
 function CJ_list_reviews($roomID){
     global $wpdb;
 
+    $qry = $wpdb->prepare('SELECT * FROM cj_review WHERE room_id = %s',$roomID);
+    $room = $wpdb->get_results($qry);
+
+    if($room[0] !== null){
+        ?>
+        <table style="width: 80%;">
+            <col width="50">
+            <tr>
+                <th>Rating</th>
+                <th>Review</th>
+            </tr>
+        <?php
+        foreach($room as $oneRoom){
+            ?>
+                    <tr>
+                        <td><?php echo $oneRoom->rating ?></td>
+                        <td><?php echo $oneRoom->description ?></td>
+                    </tr>
+            <?php
+        }
+        ?>
+            </table>
+        <?php
+    }
 
 }
 
