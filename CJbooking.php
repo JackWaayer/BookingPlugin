@@ -125,6 +125,8 @@ function CJ_make_booking(){
 						<option value="" selected disabled>Choose Room</option>
 						<option value="1">Single Room</option>
 						<option value="2">Executive Suite</option>
+						<option value="3">Double Room</option>
+
 					</select>
 
 					<select name="chosenMonth" required style="display: block; width: 20%; margin: 5px 0;">
