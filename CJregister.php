@@ -13,14 +13,15 @@ function CJ_register_form(){
 	
 	?>
 	<form action="" method="POST">
-		<label style="display:inline-block; width: 25%">Username</label><input required maxlength="15" type="text" name="username"><br />
-		<label style="display:inline-block; width: 25%">Password</label><input required maxlength="15" type="password" name="password" placeholder="******"><br />
-		<label style="display:inline-block; width: 25%">Confirm Password</label><input required maxlength="15" type="password" name="confirmPassword" placeholder="******"><br />
-		<label style="display:inline-block; width: 25%">First Name</label><input required maxlength="20" type="text" name="first_name" placeholder=""><br />
-		<label style="display:inline-block; width: 25%">Last Name</label><input required maxlength="20" type="text" name="last_name" placeholder=""><br />
-		<label style="display:inline-block; width: 25%">Home Phone</label><input required maxlength="11" type="text" name="home_phone" placeholder="060000000"><br />
-		<label style="display:inline-block; width: 25%">Mobile Phone</label><input required maxlength="11" type="text" name="mobile_phone" placeholder="0270000000"><br />
-		<label style="display:inline-block; width: 25%">Email</label><input required maxlength="30" type="text" name="email" placeholder="example@mail.com"><br /><br />
+		<label style="display:inline-block; width: 25%">Username</label><input required maxlength="15" type="text" name="username"> *<br />
+		<label style="display:inline-block; width: 25%">Password</label><input required maxlength="15" type="password" name="password" placeholder="******"> *<br />
+		<label style="display:inline-block; width: 25%">Confirm Password</label><input required maxlength="15" type="password" name="confirmPassword" placeholder="******"> *<br />
+		<label style="display:inline-block; width: 25%">First Name</label><input required maxlength="20" type="text" name="first_name" placeholder=""> *<br />
+		<label style="display:inline-block; width: 25%">Last Name</label><input required maxlength="20" type="text" name="last_name" placeholder=""> *<br />
+		<label style="display:inline-block; width: 25%">Home Phone</label><input required maxlength="11" type="text" name="home_phone" placeholder="060000000"> *<br />
+		<label style="display:inline-block; width: 25%">Mobile Phone</label><input required maxlength="11" type="text" name="mobile_phone" placeholder="0270000000"> *<br />
+		<label style="display:inline-block; width: 25%">Email</label><input required maxlength="30" type="text" name="email" placeholder="example@mail.com"> *<br /><br />
+		<p>* required fields</p>
 		<button type="submit" class="btn btn-info">Sign Up</button>
     </form>
 	<br />
