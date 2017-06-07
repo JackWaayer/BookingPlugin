@@ -87,7 +87,7 @@ function CJ_register($data){
 		//success or error for insert
 		if($insertUser && $insertAccount)
 		{
-			$msg = '<h2>Your account has been successfully created!</h2>';
+			$msg = '<h2 >Your account has been successfully created!</h2>';
 		}
 		else
 		{

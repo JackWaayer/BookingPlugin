@@ -16,9 +16,11 @@ function CJ_login_form(){
 
 
     echo   '<form action="" method="POST">
-                <input type="text" name="log" placeholder="Username"><br />
-                <input type="password" name="pwd" placeholder="Password"><br />
-                <button type="submit">Sign In</button>
+                <input type="text" name="log" placeholder="Username" style="margin: 5px 0;">
+                <br />
+                <input type="password" name="pwd" placeholder="Password" style="margin: 5px 0;">
+                <br />
+                <button type="submit" style="margin: 10px 0;">Sign In</button>
             </form>
             <br />
             <br />';

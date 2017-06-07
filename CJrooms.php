@@ -58,13 +58,15 @@ function CJ_list_rooms() {
     foreach ($allrecs as $rec) {
 		?>
         <tr>
-            <td style='padding: 80px 5px 0px 5px; text-align: center'><?php echo $rec->room_name ?></td>
-            <td style='padding: 80px 5px 0px 5px; text-align: center'><?php echo $rec->description ?></td>
-            <td style='padding: 80px 5px 0px 5px; text-align: center'>$<?php echo $rec->price ?></td>
-            <td><image src='<?php echo $imgSrcs[$imgCounter]; $imgCounter++ ?>' alt="Image of room" style="width:200px;height:150px;"></image></td>
+            <td style='padding: 60px 5px 0px 5px; text-align: center'><?php echo $rec->room_name ?></td>
+            <td style='padding: 60px 5px 0px 5px; text-align: center'><?php echo $rec->description ?></td>
+            <td style='padding: 60px 5px 0px 5px; text-align: center'>$<?php echo $rec->price ?></td>
+            <td><image src='<?php echo $imgSrcs[$imgCounter]; $imgCounter++ ?>' alt="Image of room" style="width:250px;height:100px;"></image></td>
             <td>
-                <a href="?page_id='.$page_id.'&cmd=home"><button class='btn btn-info' style='display: block; width: 150px; margin: 50px 0 50px 0;'>Browse Reviews</button></a>
-                <button class='btn btn-success' style='display: block; width: 150px; margin: 50px 0 50px 0;'>Place a Review</button>
+                <form method="POST" action="?page_id='.$page_id.'&cmd=writeReview">
+                    <input type="text" name="roomID" value="<?php echo $rec->id ?>" style="visibility: hidden;">
+                    <button type="submit" class='btn btn-info' style='display: block; width: 150px; margin: 50px 0 50px 0;'>Reviews</button>
+                </form>
             </td>
         </tr>
     <?php
@@ -93,7 +95,66 @@ function CJ_get_all_rooms(){
 }
 
 
+function CJ_review($data){
+    global $wpdb;
 
+    $qry2 = $wpdb->prepare('SELECT room_name FROM cj_room WHERE id = %s',$data['roomID']);
+    $roomName = $wpdb->get_results($qry2);
+
+    ?>
+    <h1>Reviews</h1>
+    <br />
+    <h5>Write a review for <?php echo $roomName[0]->room_name ?></h5>
+
+        <form method="POST">
+            <select name="rating" style="display: block; margin-bottom: 10px;">
+                <option value="" selected disabled>Choose rating</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <textarea rows=5 cols=60 name="review" placeholder="Write your review here..."></textarea>
+            <input type="text" name="roomID" value="<?php echo $data['roomID'] ?>" style="visibility: hidden;">
+            <button type="submit">Submit</button>
+        </form>
+    <?php
+
+
+
+    if(isset($data['review']) && isset($data['rating'])){
+        $uid = get_current_user_id();
+        echo $uid;
+        $qry1 = $wpdb->prepare('SELECT id from cj_account WHERE user_id = %s',$uid);
+        $accountID = $wpdb->get_results($qry1);
+        echo $accountID[0]->id;
+        if(
+            $wpdb->insert('cj_review',
+				array(
+				'account_id'=>($accountID[0]->id),
+				'room_id'=>($data['roomID']),
+				'rating'=>($data['rating']),
+				'description'=>$data['review']),
+				array( '%s', '%s', '%s', '%s' ))
+        ){
+            ?>
+                <div class="alert alert-success">Review successfully submitted</div>
+            <?php
+        }
+    }
+
+
+    CJ_list_reviews($data['roomID']);
+
+}
+
+
+function CJ_list_reviews($roomID){
+    global $wpdb;
+
+
+}
 
 
 

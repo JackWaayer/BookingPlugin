@@ -193,7 +193,7 @@
 					if (is_user_logged_in()){
 						wp_logout();
 						wp_set_current_user(0);
-						$msg = '<h2>You have been logged out!</h2>';
+						$msg = '<div class="alert alert-success">You have been successfully logged out!</div>';
 						set_html_temp();
 						CJ_login($data);
 					}
@@ -242,6 +242,9 @@
 					break;
 				case "contact":
 					CJ_contact($data);
+					break;
+				case "writeReview":
+					CJ_review($data);
 					break;
 				default:
 					CJ_home(); //catch random commands
