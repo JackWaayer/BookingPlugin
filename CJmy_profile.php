@@ -13,13 +13,16 @@ function CJ_my_profile() {
 	global $wpdb, $page_id;
 	$account = CJ_get_user_account();
 	
-	echo '<h2>My Profile</h2>';
-	echo '<h3>Hello '.$account[0]->first_name.' welcome to the booking application.</h3>';
-	
+	?>
+		<h1>My Profile</h1>
+		<h3>Hello <?php echo $account[0]->first_name ?> welcome to the booking application.</h3>
+	<?php
 	
 	CJ_list_bookings($account[0]->id);
 	
-	echo '<p>Have a problem? <a href="?page_id='.$page_id.'&cmd=contact">Contact us</a> here!</p>';
+	?>
+		<p style='margin: 10px 0'>Have a problem? <a href="?page_id=<?php echo $page_id ?>&cmd=contact">Contact us</a> here!</p>
+	<?php
 }
 
 

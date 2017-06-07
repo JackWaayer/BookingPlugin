@@ -14,7 +14,7 @@ function CJ_home(){
     echo '
       <br />
       <br />
-      <h5>Login and make a booking or just take a look around.</h5>';
+      <h5>Login and make a booking, register or just take a look around.</h5>';
 }
 
 

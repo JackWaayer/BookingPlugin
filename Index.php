@@ -177,7 +177,11 @@
 					CJ_home();
 					break;
 				case "myProfile":
-					CJ_my_profile();
+					if (is_user_logged_in()){
+						CJ_my_profile();
+					}else{
+						CJ_home();
+					}
 					break;
 				case "login":
 					CJ_login($data);
@@ -186,11 +190,16 @@
 					$msg = CJ_register($data);
 					break;
 				case "logout":
-					wp_logout();
-					wp_set_current_user(0);
-					$msg = '<h2>You have been logged out!</h2>';
-					set_html_temp();
-					CJ_login($data);
+					if (is_user_logged_in()){
+						wp_logout();
+						wp_set_current_user(0);
+						$msg = '<div class="alert alert-success">You have been successfully logged out!</div>';
+						set_html_temp();
+						CJ_login($data);
+					}
+					else{
+						CJ_home();
+					}
 					break;
 				case "rooms":
 					CJ_list_rooms();
@@ -199,19 +208,43 @@
 					CJ_booking_calendar($data);
 					break;
 				case "confirm":
-					CJ_confirm_booking($data);
+					if (is_user_logged_in()){
+						CJ_confirm_booking($data);
+					}
+					else{
+						CJ_booking_calendar($data);
+						$msg = '<div class="alert alert-danger">Please login or register to make a booking</div>';
+					}
 					break;
 				case "payment":
-					CJ_payment($data);
+					if (is_user_logged_in()){
+						CJ_payment($data);
+					}
+					else{
+						CJ_home();
+					}
 					break;
 				case "paymentInserts":
-					CJ_paymentInserts($data);
+					if (is_user_logged_in()){
+						CJ_paymentInserts($data);
+					}
+					else{
+						CJ_home();
+					}
 					break;
 				case "removeBookings":
-					CJ_removeBooking($data);
+					if (is_user_logged_in()){
+						CJ_removeBooking($data);
+					}
+					else{
+						CJ_home();
+					}
 					break;
 				case "contact":
 					CJ_contact($data);
+					break;
+				case "writeReview":
+					CJ_review($data);
 					break;
 				default:
 					CJ_home(); //catch random commands
@@ -223,7 +256,7 @@
 
 		
 
-		echo '<p>'.$msg.'</p>';
+		echo $msg;
 	}
 	
 	
