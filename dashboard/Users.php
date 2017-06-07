@@ -1,16 +1,8 @@
+<h1>Users</h1>
 <?php
 //master CRUD selector
 function CJ_user_content() {
 
-?>
-
-  <h1>Users</H1>
-
-  <?php
-  CJ_register($data);
-  ?>
-
-  <?php
   global $wpdb, $page_id;
   $query = "SELECT * FROM cj_account";
   $allrecs = $wpdb->get_results($query);
@@ -58,8 +50,4 @@ function CJ_user_content() {
 <?php
 
 }
-
-CJ_user_content();
-
-
 ?>

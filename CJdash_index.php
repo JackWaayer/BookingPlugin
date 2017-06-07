@@ -54,12 +54,19 @@ function CJ_plugin_menu_includes() {
             case 'CJdash_index': CJ_plugin_main();  //default
                 break;
             case 'Rooms': include('dashboard/Room.php');
+				CJ_add_room($data);
                 CJ_room_content();
 				break;
             case 'Users': include('dashboard/Users.php');
-                break;
+                CJ_register($data);
+				CJ_user_content();
+				break;
             case 'Bookings_and_Reservations': include('dashboard/Booking.php');
-                break;
+                
+				
+				CJ_list_bookings(0);
+
+				break;
             case 'Room_Extras': include('dashboard/Extras.php');
                 CJ_add_extra($data);
 				CJ_extras_content();

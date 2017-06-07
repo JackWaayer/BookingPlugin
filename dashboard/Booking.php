@@ -8,8 +8,7 @@ function CJ_booking_content() {
   <?php CJ_make_booking(); ?>
   
   <h2>All Bookings/Reservations</h2>
-	
-	<?php CJ_list_bookings(0);
+<?php
 }
 
 CJ_booking_content();
