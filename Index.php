@@ -108,6 +108,8 @@
 				id int(11) NOT NULL auto_increment,
 				rating int(1) NOT NULL,
 				description varchar(200) NOT NULL,
+				account_id int(11) NOT NULL,
+				room_id int(11) NOT NULL,
 				PRIMARY KEY (id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 				

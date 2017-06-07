@@ -1,54 +1,65 @@
 <?php
 //master CRUD selector
-function WAD_admin2_CRUD() {
+function CJuserContent() {
 
 ?>
 
   <h1>Users</H1>
 
-  <h2>Add New User </h2>
-  <form id = "addNewExtra">
-    <p>First Name<p/><input type = "text" minlength = "2" maxlength = "25">
-    <p>Last Name<p/><input type = "text" minlength = "2" maxlength = "25"></input>
-    <p>Home Number<p/><input type = "number" min = "0" max = "999999999999"></input>
-    <p>Mobile Number</p><input type = "number" min = "0" max = "999999999999"></input>
-    <p>Email Address</p><input type = "email"></input>
-    <p>Password</p><input type = "password" minlength = "5" maxlength = "25"></input>
-    <br><button> Confirm  </button>
-    <button> Cancel </button>
-  </form>
+  <?php
+  CJ_register($data);
+  ?>
 
+  <?php
+  global $wpdb, $page_id;
+  $query = "SELECT * FROM cj_account";
+  $allrecs = $wpdb->get_results($query);
+  ?>
 
   <h2>Current Users</h2>
+ 
   <table>
     <tr>
       <th>First Name</th>
       <th>Last Name</th>
-      <th>Home Number</th>
-      <th>Mobile Number</th>
       <th>E-mail Address</th>
       <th>Password</th>
+      <th>Mobile Number</th>
+      <th>Home Number</th>
       <th>CRUD</th>
     </tr>
+
+  <?php
+  foreach ($allrecs as $rec){
+    $userID = $rec->user_id;
+    $qryUser = $wpdb->prepare('SELECT * FROM wp_users WHERE ID = %s', $userID);
+    $user = $wpdb->get_results($qryUser);
+  ?>
+
     <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td><?php echo $rec->first_name?></td>
+      <td><?php echo $rec->last_name ?></td>
+      <td><?php echo $user[0]->user_email ?></td>
+      <td><?php echo $user[0]->user_pass ?></td>
+      <td><?php echo $rec->mobile_number ?></td>
+      <td><?php echo $rec->home_number ?></td>
       <td>
         <button>Edit</button>
         <button>Delete</button>
       </td>
     </tr>
+
+  <?php
+  }
+  ?>
+  
   </table>
-
-
 
 <?php
 
 }
 
-WAD_admin2_CRUD();
+CJuserContent();
+
+
 ?>

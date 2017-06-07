@@ -1,17 +1,11 @@
 <?php
 //master CRUD selector
-function WAD_editor1_CRUD() {
-
+function CJbookingContent() {
 ?>
 
   <h1>Booking and Reservations</h1>
 
-  <h2>Add new Booking/Reservation</h2>
-
   <?php CJ_make_booking(); ?>
-
-  <h2>All Bookings</h2>
-
   
   <h2>All Bookings/Reservations</h2>
 <?php
@@ -67,5 +61,5 @@ $allrecs = $wpdb->get_results($query);
 
 }
 
-WAD_editor1_CRUD();
+CJbookingContent();
 ?>

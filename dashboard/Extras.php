@@ -1,6 +1,6 @@
 <?php
 //master CRUD selector
-function WAD_editor2_CRUD() {
+function CJextrasContent() {
 
 ?>
 
@@ -8,9 +8,8 @@ function WAD_editor2_CRUD() {
 
   <h2>Add New Extra </h2>
   <form id = "addNewExtra">
-  <p>Extra Type<p/><input type = "text" minlength = "5" maxlength = "40">
-  <p>Extra Description<p/><input type = "text" min = "0" maxlength = "300"></input>
-  <p>Extra Price<p/><input type = "number" min = "0" max = "100000"></input><br>
+  <p>Extra Name<input type = "text" minlength = "5" maxlength = "40"></p>
+  <p>Extra Price<input type = "number" min = "0" max = "100000"></input></p><br>
   <button> Confirm  </button>
   <button> Cancel </button>
   </form>
@@ -26,29 +25,25 @@ function WAD_editor2_CRUD() {
   <table>
           <tr>
             <th>Name</th>
-            <th>Description</th/>
             <th>Price</th>
             <th>CRUD</th>
           </tr>
 <?php
-  foreach ($allrecs as $rec) {
-  		$room = CJ_get_room($rec->room_id);
-  
-  
+  foreach ($allrecs as $rec) {  
 ?>
           <tr>
-            <td><?php echo $room[0]->room_name ?></td>
-            <td></td>
-            <td></td>
+            <td><?php echo $rec->extra_name ?></td>
+            <td><?php echo $rec->price ?></td>
             <td>
               <button>Edit</button>
               <button>Delete</button>
             </td>
           </tr>
+      <?php
   }
-
+?>
         </table>
+      <?php
 }
-<?php
-  WAD_editor2_CRUD();
+  CJextrasContent();
 ?>

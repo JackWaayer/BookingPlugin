@@ -9,16 +9,16 @@
 
 */
 //master CRUD selector
-function CJ_admin1_CRUD() {
+function CJroomContent() {
 
 ?> 
 <h1>Rooms</H1>
 
 <h2>Add new room</h2>
 <form id = "addNewRoom">
-	<p>Room Name<p/><input type = "text" minlength = "5" maxlength = "40"></input>
-	<p>Room Description<p/><input type = "text" min = "0" maxlength = "300"></input>
-	<p>Room Price<p/><input type = "number" min = "0" max = "100000"</input><br>
+	<p>Room Name<input type = "text" minlength = "5" maxlength = "40"></input></p>
+	<p>Room Description<input type = "text" min = "0" maxlength = "300"></input></p>
+	<p>Room Price<input type = "number" min = "0" max = "100000"</input></p><br>
   	<button> Confirm </button>
   	<button> Cancel </button>
 </form>
@@ -47,5 +47,5 @@ function CJ_admin1_CRUD() {
 	CJ_list_rooms();
 }
 
-	CJ_admin1_CRUD();
+	CJroomContent();
 ?>
