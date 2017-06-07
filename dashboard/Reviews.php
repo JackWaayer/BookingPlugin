@@ -1,28 +1,10 @@
 <?php
+
+echo '<h1>Reviews</H1>';
 //master CRUD selector
 function CJ_review_content() {
 
 ?>
-
-<h1>Reviews</H1>
-
-<h2>Create New Review</h2>
-
-<form id = "addNewReview">
-	<p>Room ID<input type = "numer" name = "room_id" min = "1" max = "99999999999" default = "505"></input></p>
-	<p>User ID<input type = "number" min = "0" max = "99999999999"></input></p>
-	<p>Rating<input type = "number" min = "0" max = "5"</input></p>
-  <p>Description</p><textarea row = "10" cols="50" minlength = "10" max = "200"></textarea><br>
-  	<button> Confirm </button>
-  	<button> Cancel </button>
-</form>
-
-<?php 
-'room_id'->$data['first'];
-echo $data?>
-
-
-
 
 <h2>All Reviews</h2>
 <?php
@@ -73,5 +55,76 @@ echo $data?>
 
 }
 
-CJ_review_content();
+
+
+
+function CJ_review_form(){
+  ?>
+  <h2>Create New Review</h2>
+
+<form id = "addNewReview" method="POST">
+	<p>Room ID<input type = "number" name = "room_id" min = "1" max = "99999999999" default = "505" required></input></p>
+	<p>User ID<input type = "number" name = "account_id" min = "1" max = "99999999999" required></input></p>
+	<p>Rating<input type = "number" name = "rating" min = "0" max = "5" required></input></p>
+  <p>Description</p><textarea name = "description" row = "10"  cols="50" minlength = "10" max = "200" required></textarea><br>
+  	<button type="submit"> Confirm </button>
+  	<button> Cancel </button>
+</form>
+<?php
+}
+
+
+
+
+function CJ_add_Review($data){
+
+  CJ_review_form();
+
+  		
+  global $wpdb;
+
+// Server Vaildation 
+
+    if($data['room_id'] < 99999999999 && 
+    $data['room_id'] > 0 && 
+    !empty($data['room_id']) && 
+    isset($data['room_id']) ){ // room_id
+
+      if($data['account_id'] < 99999999999 && 
+      $data['account_id'] > 0 && 
+      !empty($data['account_id']) && 
+      isset($data['account_id']) ){ // account_id
+
+        if($data['rating'] < 6 && 
+        $data['rating'] > 0 && 
+        !empty($data['rating']) && 
+        isset($data['rating']) ){ // rating
+
+          if( strlen($data['description']) > 0 && 
+          strlen($data['description']) < 200 && 
+          !empty($data['description']) && 
+          isset($data['description'])){
+
+            //Insert after all vaildation passes
+
+              if ($wpdb->insert('cj_review', 
+                      array(
+                      'room_id'=>($data['room_id']),
+                      'account_id'=>($data['account_id']),
+                      'rating'=>($data['rating']),
+                      'description'=>$data['description']),
+                      array( '%s', '%s', '%s', '%s' )
+                      ))
+                {
+                  echo "Insert successful";
+                
+                }else{
+                  
+                  echo "Insert failed";
+                }
+          }
+        }
+      }
+    }
+}
 ?>

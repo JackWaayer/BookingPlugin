@@ -1,14 +1,5 @@
 <?php
-/*========================================================================================
-  This file is an example CRUD for our admin_page_1 - take note of the URLs
-  ?page=admin_page_1&command=...
 
-  You can duplicate the code in this file for each of the other files
-
-  IMPORTANT Take note of the function CJ_admin1_CRUD and it is also called at the bottom of this page
-
-*/
-//master CRUD selector
 function CJ_room_content() {
 
 ?> 
@@ -47,5 +38,17 @@ function CJ_room_content() {
 	CJ_list_rooms();
 }
 
-	CJ_room_content();
+
+
+function  (){
+
+}
+
+
+function  (){
+
+}
+
+
+
 ?>

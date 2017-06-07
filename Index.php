@@ -116,7 +116,7 @@
 				CREATE TABLE CJ_extra (
 				id int(11) NOT NULL auto_increment,
 				extra_name varchar(20) NOT NULL,
-				price float(3,2) NOT NULL,
+				price float(5,2) NOT NULL,
 				PRIMARY KEY (id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 				

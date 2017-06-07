@@ -4,16 +4,6 @@ function CJ_extras_content() {
 
 ?>
 
-  <h1>Room Extras</H1>
-
-  <h2>Add New Extra </h2>
-  <form id = "addNewExtra">
-  <p>Extra Name<input type = "text" minlength = "5" maxlength = "40"></p>
-  <p>Extra Price<input type = "number" min = "0" max = "100000"></input></p><br>
-  <button> Confirm  </button>
-  <button> Cancel </button>
-  </form>
-
 <?php
 
   global $wpdb, $page_id;
@@ -25,7 +15,7 @@ function CJ_extras_content() {
   <table>
           <tr>
             <th>Name</th>
-            <th>Price</th>
+            <th>Price ($)</th>
             <th>CRUD</th>
           </tr>
 <?php
@@ -45,5 +35,57 @@ function CJ_extras_content() {
         </table>
       <?php
 }
-  CJ_extras_content();
+
+function CJ_extras_form(){
+
+  ?>
+  <h1>Room Extras</H1>
+
+  <h2>Add New Extra </h2>
+  <form id = "addNewExtra" method="POST">
+  <p>Extra Name<input type = "text" name = "extra_name" minlength = "5" maxlength = "40"></p>
+  <p>Extra Price<input type = "number" step = "0.01" name = "price" min = "0" max = "99999"></input></p><br>
+  <button type = "submit"> Confirm  </button>
+  <button> Cancel </button>
+  </form>
+<?php
+}
+
+
+function CJ_add_extra($data){
+
+  CJ_extras_form();
+
+  	global $wpdb;
+
+// Server Vaildation 
+
+    if ( !empty($data['extra_name']) && 
+    isset($data['extra_name']) && 
+    strlen($data['extra_name']) > 0 &&
+     strlen($data['extra_name']) < 40 ){
+
+      if(!empty($data['price']) && 
+        isset($data['price']) && 
+        $data['price'] > 0 && 
+        $data['price'] < 10000 ){
+
+        //Insert after all vaildation passes
+
+          if ($wpdb->insert('cj_extra', 
+             array(
+            'extra_name'=>($data['extra_name']),
+            'price'=>$data['price']),
+             array( '%s', '%s' )
+             ))
+          {
+            echo "Insert successful";
+                
+          }else{
+                  
+            echo "Insert failed";
+          }
+      }
+    }
+  }
 ?>

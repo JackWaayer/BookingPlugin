@@ -48,20 +48,26 @@ function CJ_plugin_settings_link($links) {
 //The main menu driver
 //this function indludes the files linked to by the menu
 function CJ_plugin_menu_includes() {
+		$data = $_POST;
         $current_page = isset($_REQUEST['page']) ? esc_html($_REQUEST['page']) : 'CJdash_index';
         switch ($current_page) {
             case 'CJdash_index': CJ_plugin_main();  //default
                 break;
             case 'Rooms': include('dashboard/Room.php');
-                break;
+                CJ_room_content();
+				break;
             case 'Users': include('dashboard/Users.php');
                 break;
             case 'Bookings_and_Reservations': include('dashboard/Booking.php');
                 break;
             case 'Room_Extras': include('dashboard/Extras.php');
-                break;
+                CJ_add_extra($data);
+				CJ_extras_content();
+				break;
 			case 'Reviews': include('dashboard/Reviews.php');
-                break;
+                CJ_add_Review($data);
+				CJ_review_content();
+				break;
         }
 }
 
@@ -89,6 +95,7 @@ function CJ_plugin_main() {
 	echo '<p>This is a single page application, for management of a hotel/motel booking system. The Sub-Menus allow changes by acting as a GUI for the Database.  </p>';
 	echo '<h2> How do i use it?</h2>';
 	echo '<p>To use this pluging: Navagate to the page you wish to be used as the booking system, and add the shortcode [plugin] </p>';
+	echo '<p>The contact form for this plugin requires the "Contact Form 7" (https://contactform7.com/) plugin to be installed. The contact for to use should be titled: "CJ_Contact" </p>';
 }
 
 function CJ_plugin_options() {
