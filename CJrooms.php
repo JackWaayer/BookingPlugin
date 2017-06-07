@@ -30,7 +30,9 @@ if (!function_exists('pr')) {
 function CJ_list_rooms() {
     global $wpdb, $page_id;
 	
-	echo '<h2>Room Details</h2>';
+    ?>
+	    <h1>Room Details</h1>
+    <?php
 	
 
 	//grab all the rooms from the database
@@ -56,11 +58,12 @@ function CJ_list_rooms() {
     foreach ($allrecs as $rec) {
 		?>
         <tr>
-            <td><?php echo $rec->room_name ?></td>
-            <td><?php echo $rec->description ?></td>
-            <td><?php echo $rec->price ?></td>
+            <td style='padding: 80px 5px 0px 5px; text-align: center'><?php echo $rec->room_name ?></td>
+            <td style='padding: 80px 5px 0px 5px; text-align: center'><?php echo $rec->description ?></td>
+            <td style='padding: 80px 5px 0px 5px; text-align: center'>$<?php echo $rec->price ?></td>
             <td><image src='<?php echo $imgSrcs[$imgCounter]; $imgCounter++ ?>' alt="Image of room" style="width:200px;height:150px;"></image></td>
-            <td><button class='btn btn-info' style='display: block; width: 150px; margin: 50px 0 50px 0;'>Browse Reviews</button>
+            <td>
+                <a href="?page_id='.$page_id.'&cmd=home"><button class='btn btn-info' style='display: block; width: 150px; margin: 50px 0 50px 0;'>Browse Reviews</button></a>
                 <button class='btn btn-success' style='display: block; width: 150px; margin: 50px 0 50px 0;'>Place a Review</button>
             </td>
         </tr>

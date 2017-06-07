@@ -11,17 +11,18 @@ if (!function_exists('pr')) {
 function CJ_register_form(){
 	global $page_id;
 	
-	echo   '<form action="" method="POST">
-				Username<input type="text" name="username" placeholder="e.g. George"><br />
-				Password<input type="password" name="password" placeholder="******"><br />
-                First Name<input type="text" name="first_name" placeholder=""><br />
-                Last Name<input type="text" name="last_name" placeholder=""><br />
-				Home Phone<input type="text" name="home_phone" placeholder=""><br />
-				Mobile Phone<input type="text" name="mobile_phone" placeholder=""><br />
-				Email<input type="text" name="email" placeholder="example@mail.com"><br />
-                <button type="submit">Sign Up</button>
-            </form>';
-			
+	?>
+	<form action="" method="POST">
+		Username<input type="text" name="username" placeholder="e.g. George"><br />
+		Password<input type="password" name="password" placeholder="******"><br />
+		First Name<input type="text" name="first_name" placeholder=""><br />
+		Last Name<input type="text" name="last_name" placeholder=""><br />
+		Home Phone<input type="text" name="home_phone" placeholder=""><br />
+		Mobile Phone<input type="text" name="mobile_phone" placeholder=""><br />
+		Email<input type="text" name="email" placeholder="example@mail.com"><br />
+		<button type="submit">Sign Up</button>
+    </form>
+	<?php		
 	
 }
 
