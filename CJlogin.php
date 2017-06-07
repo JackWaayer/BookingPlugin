@@ -32,10 +32,10 @@ function CJ_login_form(){
 function CJ_login($data){
     global $wpdb;
 	
-    ?>
-        <h1>Login</h1>
-    <?php
-    
+	echo '<h2>'.$msg.'</h2>
+	<br >
+	<br >';
+    echo '<h1>Login</h1>';
     CJ_login_form();
 	
     

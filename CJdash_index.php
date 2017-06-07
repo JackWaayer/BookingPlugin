@@ -20,33 +20,28 @@ add_action('admin_menu', 'CJ_plugin_menu');
 //========================================================================================
 //hook for the install function - used to create any tables for the plugin
 function CJ_plugin_install () {  
-	//refer   CJ8faq.php and CJ7install.php for example code
 }  
 
 function CJ_plugin_deactivate () {    
-	//refer   CJ8faq.php and CJ7install.php for example code
 }  
 
 function CJ_plugin_uninstall() {
-	//refer   CJ8faq.php and CJ7install.php for example code
 }
  
-function CJ_pluging_loaded() {
-   //add code that needs to be called each time the plugin has loaded	
+function CJ_pluging_loaded() {	
 }
 
 //========================================================================================
-// add the 'settings' label to the plugin menu - it works like a filter by adding the settings URL to the URL list
+
 function CJ_plugin_settings_link($links) { 
-	//http://codex.wordpress.org/Function_Reference/admin_url
-	//read the note above regarding the PLUGINSLUG page slug used for the rest of the plugin
+
     array_unshift($links, '<a href="'.admin_url('options-general.php?page=CJdash_indexoptions').'">Settings</a>'); 
    return $links; 
 }
 
 //========================================================================================
 //The main menu driver
-//this function indludes the files linked to by the menu
+
 function CJ_plugin_menu_includes() {
 		$data = $_POST;
         $current_page = isset($_REQUEST['page']) ? esc_html($_REQUEST['page']) : 'CJdash_index';
@@ -89,12 +84,11 @@ function CJ_plugin_menu() {
     	add_submenu_page('CJdash_index','CJ submenu one', 'Reviews',   'read',         'Reviews',   'CJ_plugin_menu_includes');		
 	
 	
-//http://codex.wordpress.org/Function_Reference/add_options_page
-//add_options_page( $page_title, $menu_title, $capability, $menu_slug, $function);
+
 	add_options_page('CJ menu Options', 'CJ menu options', 'read', 'CJdash_indexoptions', 'CJ_plugin_options');		
 }
 
-// HTML/Page Content
+// Content
 function CJ_plugin_main() {
 	echo '<h1>CJ Booking Plugin</h1>';
 	echo '<h2> What is this? </h2>';
@@ -102,13 +96,13 @@ function CJ_plugin_main() {
 	echo '<p>This is a single page application, for management of a hotel/motel booking system. The Sub-Menus allow changes by acting as a GUI for the Database.  </p>';
 	echo '<h2> How do i use it?</h2>';
 	echo '<p>To use this pluging: Navagate to the page you wish to be used as the booking system, and add the shortcode [plugin] </p>';
-	echo '<p>The contact form for this plugin requires the "Contact Form 7" (https://contactform7.com/) plugin to be installed. The contact for to use should be titled: "CJ_Contact" </p>';
+	echo '<p>To have the contact page useable, please install the "Contact Form 7" plugin (https://contactform7.com/) and create a form with the title "CJ_Contact</p>';
 }
 
 function CJ_plugin_options() {
 	echo '<h1>Plugin options page</h1>';
 	echo '<p>This page was called/accessed using the menu slug CJdash_indexoptions with the URL ?page=CJdash_indexoptions</p>';
-	echo 'To have the contact page useable, please install the "Contact Form 7" plugin (https://contactform7.com/) and create a form with the title "CJ_Contact"';
+
 }
 
 ?>

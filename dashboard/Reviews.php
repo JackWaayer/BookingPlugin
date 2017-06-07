@@ -42,7 +42,8 @@ function CJ_review_content() {
       <td><?php echo $room[0]->room_name?></td>
       <td>
         <button>Edit</button>
-        <button>Delete</button>
+        <button >Delete</button>
+        <?php//<button id = "delButton" onclick = "CJ_delete_review($rec->id);">Delete</button>?>
       </td>
     </tr>
 
@@ -54,16 +55,26 @@ function CJ_review_content() {
 <?php
 
 }
+?>
+ <!--$('.delButton').click(function() {
 
+ $.ajax({
+  type: "POST",
+  data: { id: $rec->id }
+}).done(function( msg ) {
+  alert( "Data Saved: " + msg );
+});    
 
+    });-->
 
+<?php
 
 function CJ_review_form(){
   ?>
   <h2>Create New Review</h2>
 
 <form id = "addNewReview" method="POST">
-	<p>Room ID<input type = "number" name = "room_id" min = "1" max = "99999999999" default = "505" required></input></p>
+	<p>Room ID<input type = "number" name = "room_id" min = "1" max = "99999999999" required></input></p>
 	<p>User ID<input type = "number" name = "account_id" min = "1" max = "99999999999" required></input></p>
 	<p>Rating<input type = "number" name = "rating" min = "0" max = "5" required></input></p>
   <p>Description</p><textarea name = "description" row = "10"  cols="50" minlength = "10" max = "200" required></textarea><br>
@@ -74,7 +85,18 @@ function CJ_review_form(){
 }
 
 
+function CJ_delete_review($id){
 
+	global $wpdb;
+
+	$wpdb->query($wpdb->prepare("DELETE FROM cj_review WHERE id=%s",$reviewID));
+
+	if ($results) {
+		echo "<p>Delete Success!</p>";
+	}else{
+		echo "<p>Delete Failed!</p>";
+  }
+}
 
 function CJ_add_Review($data){
 
@@ -84,6 +106,8 @@ function CJ_add_Review($data){
   global $wpdb;
 
 // Server Vaildation 
+
+// should have querry that gets the highest ID number of both room and account. And use these values for the upper number vaildation
 
     if($data['room_id'] < 99999999999 && 
     $data['room_id'] > 0 && 

@@ -88,8 +88,8 @@ function CJ_payment($data){
 		<input type="hidden" name="selectedMonth" value= <?php echo $data['selectedMonth'] ?>>
 		<input type="hidden" name="selectedYear" value= <?php echo $data['selectedYear'] ?>>
 
-		<button type="submit" name="submit" value="submit" style="margin-left: 40%;" class="btn btn-primary">Confirm Payment</button>
-		<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button class="btn btn-info">Cancel</button></a>
+		<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Confirm Payment</button>
+		<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
 		</form>
 	<?php
 

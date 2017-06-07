@@ -58,14 +58,14 @@ function CJ_list_rooms() {
     foreach ($allrecs as $rec) {
 		?>
         <tr>
-            <td style='padding: 50px 5px 0px 5px; text-align: center'><?php echo $rec->room_name ?></td>
-            <td style='padding: 50px 5px 0px 5px; text-align: center'><?php echo $rec->description ?></td>
-            <td style='padding: 50px 5px 0px 5px; text-align: center'>$<?php echo $rec->price ?></td>
+            <td style='padding: 60px 5px 0px 5px; text-align: center'><?php echo $rec->room_name ?></td>
+            <td style='padding: 60px 5px 0px 5px; text-align: center'><?php echo $rec->description ?></td>
+            <td style='padding: 60px 5px 0px 5px; text-align: center'>$<?php echo $rec->price ?></td>
             <td><image src='<?php echo $imgSrcs[$imgCounter]; $imgCounter++ ?>' alt="Image of room" style="width:250px;height:100px;"></image></td>
             <td>
                 <form method="POST" action="?page_id='.$page_id.'&cmd=writeReview">
                     <input type="text" name="roomID" value="<?php echo $rec->id ?>" style="visibility: hidden;">
-                    <button type="submit" class='btn btn-info' style='display: block; width: 150px; margin: 20px 0 0 0;'>Reviews</button>
+                    <button type="submit" class='btn btn-info' style='display: block; width: 150px; margin: 50px 0 50px 0;'>Reviews</button>
                 </form>
             </td>
         </tr>
@@ -103,7 +103,7 @@ function CJ_review($data){
 
     ?>
     <h1>Reviews</h1>
-
+    <br />
     <h5>Write a review for <?php echo $roomName[0]->room_name ?></h5>
 
         <form method="POST">
@@ -117,9 +117,8 @@ function CJ_review($data){
             </select>
             <textarea required maxlength="500" rows=5 cols=60 name="review" placeholder="Write your review here..."></textarea>
             <input type="text" name="roomID" value="<?php echo $data['roomID'] ?>" style="visibility: hidden;">
-            <button type="submit" class="btn btn-info">Submit</button>
+            <button type="submit">Submit</button>
         </form>
-        <br />
         <br />
     <?php
 
@@ -156,29 +155,22 @@ function CJ_list_reviews($roomID){
     global $wpdb;
 
     $qry = $wpdb->prepare('SELECT * FROM cj_review WHERE room_id = %s',$roomID);
-    $review = $wpdb->get_results($qry);
+    $room = $wpdb->get_results($qry);
 
-    if($review[0] !== null){
+    if($room[0] !== null){
         ?>
-        <h4>List of Reviews</h4>
-
         <table style="width: 80%;">
-            <col width="100">
             <col width="50">
             <tr>
-                <th>Username</th>
                 <th>Rating</th>
                 <th>Review</th>
             </tr>
         <?php
-        foreach($review as $oneReview){
-            $qry2 = $wpdb->prepare('SELECT first_name FROM cj_account WHERE id = %s',$oneReview->account_id);
-            $name = $wpdb->get_results($qry2);
+        foreach($room as $oneRoom){
             ?>
                     <tr>
-                        <td><?php echo $name[0]->first_name ?></td>
-                        <td><?php echo $oneReview->rating ?></td>
-                        <td><?php echo $oneReview->description ?></td>
+                        <td><?php echo $oneRoom->rating ?></td>
+                        <td><?php echo $oneRoom->description ?></td>
                     </tr>
             <?php
         }

@@ -43,8 +43,8 @@ function CJ_extras_form(){
 
   <h2>Add New Extra </h2>
   <form id = "addNewExtra" method="POST">
-  <p>Extra Name<input type = "text" name = "extra_name" minlength = "5" maxlength = "40"></p>
-  <p>Extra Price<input type = "number" step = "0.01" name = "price" min = "0" max = "999.99"></input></p><br>
+  <p>Extra Name<input type = "text" name = "extra_name" minlength = "5" maxlength = "40" required></p>
+  <p>Extra Price<input type = "number" step = "0.01" name = "price" min = "0" max = "999.99" required></input></p><br>
   <button type = "submit"> Confirm  </button>
   <button> Cancel </button>
   </form>
