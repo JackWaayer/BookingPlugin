@@ -98,6 +98,10 @@ function CJ_payment($data){
 function CJ_paymentInserts($data){
     global $wpdb;
     $success = true;
+	
+	$uid = get_current_user_id();
+	$qry1 = $wpdb->prepare('SELECT * FROM cj_account WHERE user_id = %s',$uid);
+    $account = $wpdb->get_results($qry1);
     
 
 
@@ -115,11 +119,7 @@ function CJ_paymentInserts($data){
 				echo "<div class='alert alert-success'>Delete Success!</div>";
 			}*/
 		}
-
-        $uid = get_current_user_id();
-
-        $qry1 = $wpdb->prepare('SELECT * FROM cj_account WHERE user_id = %s',$uid);
-        $account = $wpdb->get_results($qry1);
+        
 
         if(!
         $wpdb->insert('cj_booking',
@@ -156,7 +156,22 @@ function CJ_paymentInserts($data){
     if($success){
         ?>
             <div class="alert alert-success">Payment Successful!</div>
-        <?php
+		<?php
+		$current_user = wp_get_current_user();
+		//MailTo
+		$msg = "Thank you for making a booking with Booking Masters.";
+		$msg = wordwrap($msg,70);
+		if(mail($current_user->user_email,"Booking Confirmation",$msg)){
+			?>
+            	<div class="alert alert-success">Email sent to <?php echo $current_user->user_email ?></div>
+			<?php
+		}
+		else{
+			?>
+            	<div class="alert alert-success">Email could not be sent</div>
+			<?php
+		}
+        
     }else{
         ?>
             <div class="alert alert-danger">Something went terribly wrong.</div>
