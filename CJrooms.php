@@ -36,13 +36,6 @@ function CJ_list_rooms() {
 	//grab all the rooms from the database
     $query = "SELECT * FROM cj_room";
     $allrecs = $wpdb->get_results($query);
-
-    $imgSrcs = array(
-                'http://70.townhousehotels.com/var/ezdemo_site/storage/images/hotels/torino/townhouse-70/rooms-suites/single-rooms/gallery/single-room/2521-2-eng-GB/Single-Room.jpg',
-                'http://www.grandxlhotels.com/wp-content/uploads/2015/12/h_694f4b8d43.jpg',
-                'http://amari.azureedge.net/watergate/hotel-photos/executive-room-1.jpg'
-    );
-    $imgCounter = 0;
 	
     ?>
     <hr />
@@ -50,8 +43,6 @@ function CJ_list_rooms() {
             <th>Room Name</th>
             <th>Desription</th>
             <th>Price</th>
-            <th></th>
-            <th>Reviews</th>
     <?php
     foreach ($allrecs as $rec) {
 		?>
@@ -59,10 +50,6 @@ function CJ_list_rooms() {
             <td><?php echo $rec->room_name ?></td>
             <td><?php echo $rec->description ?></td>
             <td><?php echo $rec->price ?></td>
-            <td><image src='<?php echo $imgSrcs[$imgCounter]; $imgCounter++ ?>' alt="Image of room" style="width:200px;height:150px;"></image></td>
-            <td><button class='btn btn-info' style='display: block; width: 150px; margin: 50px 0 50px 0;'>Browse Reviews</button>
-                <button class='btn btn-success' style='display: block; width: 150px; margin: 50px 0 50px 0;'>Place a Review</button>
-            </td>
         </tr>
     <?php
     }

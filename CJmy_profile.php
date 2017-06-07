@@ -15,7 +15,7 @@ function CJ_my_profile() {
 	
 	echo '<h2>My Profile</h2>';
 	echo '<h3>Hello '.$account[0]->first_name.' welcome to the booking application.</h3>';
-	
+	echo '<p>This is a list of your current bookings/reservations</p>';
 	
 	CJ_list_bookings($account[0]->id);
 	

@@ -36,11 +36,7 @@
 
 
 	//Current database version for the Booking Plugin
-<<<<<<< HEAD
-	$CJ_dbversion = "0.6";
-=======
 	$CJ_dbversion = "0.7";
->>>>>>> dcfb963fa3fdb7c3216eeed22518af02a3e66a39
 	
 	
 	add_action( 'wp_enqueue_scripts', 'WAD_load_scripts' );
@@ -104,7 +100,7 @@
 				id int(11) NOT NULL auto_increment,
 				room_name varchar(30) NOT NULL,
 				description varchar(1000) NOT NULL,
-				price float(5,2) NOT NULL,
+				price float(3,2) NOT NULL,
 				PRIMARY KEY (id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 				

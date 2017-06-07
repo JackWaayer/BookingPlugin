@@ -10,11 +10,7 @@ if (!function_exists('pr')) {
 
 
 function CJ_home(){
-    echo '<h1>Welcome to the Booking Plugin</h1>';
-    echo '
-      <br />
-      <br />
-      <h5>Login and make a booking or just take a look around.</h5>';
+    echo '<h1>This is the home page!</h1>';
 }
 
 
