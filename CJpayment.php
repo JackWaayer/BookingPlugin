@@ -1,12 +1,9 @@
 <?php 
-
 function CJ_payment($data){
 	global $wpdb, $page_id;
-
 	$qry = $wpdb->prepare('SELECT * FROM cj_room WHERE id = %s',$data['roomID']);
 	$oneRoom = $wpdb->get_results($qry);
 	$total =0.00;
-
 	?>
 		<h1>Payment</h1>
 		<table>
@@ -41,7 +38,6 @@ function CJ_payment($data){
 				<th>Price</th>
 			</tr>
 			<?php
-
 			foreach($data["chosenExtras"] as $value){
 				$query = $wpdb->prepare('SELECT * FROM cj_extra WHERE id = %s',$value);
 				$extra = $wpdb->get_results($query);
@@ -66,14 +62,12 @@ function CJ_payment($data){
         <form method="POST" action="?page_id='.$page_id.'&cmd=paymentInserts">
 	<?php
 	
-
 	
     foreach($data['days'] as $day){
 	?>
 		<input type="hidden" name="days[]" value= <?php echo $day ?>>
 	<?php
     }
-
     if(null !== $data['chosenExtras']){
         foreach($data['chosenExtras'] as $ce){
         ?>
@@ -88,27 +82,31 @@ function CJ_payment($data){
 		<input type="hidden" name="selectedMonth" value= <?php echo $data['selectedMonth'] ?>>
 		<input type="hidden" name="selectedYear" value= <?php echo $data['selectedYear'] ?>>
 
-		<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Confirm Payment</button>
-		<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
+		<button type="submit" name="submit" value="submit" style="margin-left: 40%;" class="btn btn-primary">Confirm Payment</button>
 		</form>
 	<?php
-
 }
-
-
 function CJ_paymentInserts($data){
     global $wpdb;
     $success = true;
+	
+	$uid = get_current_user_id();
+	$qry1 = $wpdb->prepare('SELECT * FROM cj_account WHERE user_id = %s',$uid);
+    $account = $wpdb->get_results($qry1);
     
-
 	foreach($data['days'] as $day){
         
         $formattedDate = $data['selectedYear'].'/'.$data['selectedMonth'].'/'.$day;
-        $uid = get_current_user_id();
-
-        $qry1 = $wpdb->prepare('SELECT * FROM cj_account WHERE user_id = %s',$uid);
-        $account = $wpdb->get_results($qry1);
-
+		$qry3 = $wpdb->prepare('SELECT id FROM cj_booking WHERE date_booked = %s',$formattedDate);
+		$oldBooking = $wpdb->get_results($qry3);
+		if($oldBooking[0]->id !== null){
+			$results = $wpdb->query($wpdb->prepare("DELETE FROM cj_booking WHERE id=%s",$oldBooking[0]->id));
+			//Confirms deletion
+			/*if ($results) {
+				echo "<div class='alert alert-success'>Delete Success!</div>";
+			}*/
+		}
+        
         if(!
         $wpdb->insert('cj_booking',
 				array(
@@ -121,10 +119,8 @@ function CJ_paymentInserts($data){
         ){
             $success = false;
         }
-
         $qry2 = $wpdb->prepare('SELECT * FROM cj_booking WHERE date_booked = %s',$formattedDate);
         $booking = $wpdb->get_results($qry2);
-
         if(null !== $data['chosenExtras']){
             foreach($data['chosenExtras'] as $extra){
                 if(!
@@ -138,19 +134,30 @@ function CJ_paymentInserts($data){
                 }
             }
         }
-
     }
-
     if($success){
         ?>
-            <h3 style='color:green; text-align:center;'>Payment Successful!</h3>
-        <?php
+            <div class="alert alert-success">Payment Successful!</div>
+		<?php
+		$current_user = wp_get_current_user();
+		//MailTo
+		$msg = "Thank you for making a booking with Booking Masters.";
+		$msg = wordwrap($msg,70);
+		if(mail($current_user->user_email,"Booking Confirmation",$msg)){
+			?>
+            	<div class="alert alert-success">Email sent to <?php echo $current_user->user_email ?></div>
+			<?php
+		}
+		else{
+			?>
+            	<div class="alert alert-success">Email could not be sent</div>
+			<?php
+		}
+        
     }else{
         ?>
-            <h3 style='color:red; text-align:center;'>Something went terribly wrong.</h3>
+            <div class="alert alert-danger">Something went terribly wrong.</div>
         <?php
     }
 }
-
-
 ?> 

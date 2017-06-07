@@ -1,22 +1,13 @@
 <?php
-
-
 //simple variable debug function
 //usage: pr($avariable);
 if (!function_exists('pr')) {
   function pr($var) { echo '<pre>Diagnostics: '; var_dump($var); echo '</pre>';}
 }
-
-
 wp_enqueue_style( 'bookingCalender', plugins_url('css/calendar.css',__FILE__));
-
-
-
-
 function CJ_list_bookings($accountID){
 	
 	global $wpdb, $page_id;
-
 	if (current_user_can('manage_options')) {  //administrator capabilities
 		$query = "SELECT * FROM cj_booking";
 	}  
@@ -31,7 +22,6 @@ function CJ_list_bookings($accountID){
 	$allrecs = $wpdb->get_results($query);
 	
 	if($allrecs[0] !== null){
-
 		?>
 		<p>This is a list of your current bookings/reservations</p>
 			<hr />
@@ -74,7 +64,7 @@ function CJ_list_bookings($accountID){
 		?>
 			</table>
 			<br />
-			<button class='btn btn-danger' type='submit' style=''>Delete</button>
+			<button class='btn btn-danger' type='submit' style='float: right;'>Delete Selected</button>
 			</form>
 		<?php
 	}else{
@@ -87,18 +77,16 @@ function CJ_list_bookings($accountID){
 	}
 	
 }
-
-
 function CJ_removeBooking($data){
 	global $wpdb;
-
 	if($data['deleteBooking'] !== null){
+		$results;
 		foreach($data['deleteBooking'] as $del){
 			$results = $wpdb->query($wpdb->prepare("DELETE FROM cj_booking WHERE id=%s",$del));
-			if ($results) {
-				echo "<h3>Delete Success!</h3>";
-			}
 		}
+		if ($results) {
+				echo "<div class='alert alert-success'>Delete Success!</div>";
+			}
 	}
 	else{
 		?>
@@ -106,8 +94,6 @@ function CJ_removeBooking($data){
 		<?php
 	}
 }
-
-
 function CJ_make_booking(){
 	global $page_id;
 	$rooms = CJ_get_all_rooms();
@@ -120,14 +106,15 @@ function CJ_make_booking(){
 				<form method="POST">
 					<h5>Please choose a room and a month to view available bookings.</h5>
 
-					<select name="selectRooms" required>
+					<select name="selectRooms" required style="display: block; width: 20%; margin: 5px 0;">
 						<option value="" selected disabled>Choose Room</option>
 						<option value="1">Single Room</option>
 						<option value="2">Executive Suite</option>
-					</select>
-					<br />
+						<option value="3">Double Room</option>
 
-					<select name="chosenMonth" required>
+					</select>
+
+					<select name="chosenMonth" required style="display: block; width: 20%; margin: 5px 0;">
 						<option value="" selected disabled>Choose Month</option>
 						<option value=1>January</option>
 						<option value=2>February</option>
@@ -142,9 +129,9 @@ function CJ_make_booking(){
 						<option value=11>November</option>
 						<option value=12>December</option>
 					</select>
-					<br />
 
-					<select name="chosenYear" required>
+
+					<select name="chosenYear" required style="display: block; width: 20%; margin: 5px 0;">
 						<option selected value=2017>2017</option>
 						<option value=2018>2018</option>
 						<option value=2019>2019</option>
@@ -152,35 +139,26 @@ function CJ_make_booking(){
 					</select>
 					<br />
 
-					<button type="Submit">View Bookings</button>
+					<button type="Submit" class="btn btn-info">View Calendar</button>
 				</form>
 	
 	<?php
 }
-
-
 function CJ_booking_calendar($data){
 	global $wpdb;
-
 	CJ_make_booking();
 	
 	if(isset($data["selectRooms"])){
 		$roomID = $data["selectRooms"];
-
 		$query2 = $wpdb->prepare("SELECT date_booked, type FROM cj_booking WHERE room_id = %s",$roomID);
 		$bookings = $wpdb->get_results($query2);
-
-
-
 		date_default_timezone_set("Pacific/Auckland"); 
 		//days of the week used for headings. This particular method is not particulary multilanguage friendly.
 		$weekdays = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 		extract(shortcode_atts(array('year' => $data['chosenYear'], 'month' => $data['chosenMonth']), $shortcodeattributes));	
-
 		//default to the current month and year
 		if ($month == '-') $month = date('m');	
 		if ($year == '-') $year = date('Y');	
-
 	//get the previous month's days - used to fill in the blank days at the start.	
 		//make sure we roll over to december in the case of $month being January	
 		if ($month == 1) //January?
@@ -196,7 +174,6 @@ function CJ_booking_calendar($data){
 		$days = date('t',mktime(0,0,1,$month,1,$year));	//days in the month
 		$lastblankdays = 7-(($dow+$days) % 7); //remaining days in the last week
 		$lastblankdays = ($lastblankdays==7)?0:$lastblankdays;
-
 	//calendar heading - note we are using flexbox for the styling
 		$thedate = date('F Y',mktime(0,0,1,$month,1,$year));
 		echo '<main id="calendar"><div><h3 style="text-align: center">'.$thedate.'</h3></div><div class="th">';
@@ -228,11 +205,9 @@ function CJ_booking_calendar($data){
 			echo '<div data-date="'.($i+1).'">'; //add 1 to the for loop variable as it starts at zero not one
 			//..... insert your event code and such here
 			$booked = false;
-
 			?>
 				<form method="POST" action="?page_id='.$page_id.'&cmd=confirm">
 			<?php
-
 			foreach($bookings as $b){
 				$d = date_parse_from_format("Y-m-d", $b->date_booked);
 				if($d["year"] == $year && $d["month"] == $month && $d["day"] == $i+1){
@@ -249,7 +224,6 @@ function CJ_booking_calendar($data){
 					$booked = true;
 				}
 			}
-
 			if(!$booked){
 				?>
 					<input type="checkbox" name="selectedDays[]" value=<?php echo $i+1 ?> style="margin-left: 30px;">
@@ -267,7 +241,6 @@ function CJ_booking_calendar($data){
 			echo '<div data-date="'.$j++.'"></div>'; //!! this increments $j AFTER the value has been used
 	//close off the calendar	
 		echo '</div></main>';
-
 		?>
 		<p style="font-size: 10px;">*You may only book a reserved room.</p>
 		<label>Please choose whether to book or reserve the selected dates:</label>
@@ -282,19 +255,15 @@ function CJ_booking_calendar($data){
 			<br />
 			<br />
 
-			<button type="submit" name="submit" value="submit">Place Booking/Reservation</button>
+			<button type="submit" name="submit" value="submit" class="btn btn-primary">Place Booking/Reservation</button>
 		</form>
 		<?php
 	}
-
 	
 	
 }
-
-
 function CJ_confirm_booking($data){
 	global $wpdb;
-
 	if(null!==($data['reservedSelectedDays']) && $data['type'] == 1){
 		?>
 		<div class='alert alert-danger'>
@@ -310,50 +279,43 @@ function CJ_confirm_booking($data){
 		<?php
 	}
 	else{
-
 	
-
 		$type = $data["type"];
 		$selectedDays = $data["selectedDays"];
 		$selectedMonth = $data["month"];
 		$selectedYear = $data["year"];
 		$rSelections = $data["reservedSelectedDays"];
 		$roomID = $data['roomID'];
-
 		$qry = 'SELECT * FROM cj_extra';
 		$extras = $wpdb->get_results($qry);
-
+		$qry2 = $wpdb->prepare('SELECT room_name FROM cj_room WHERE id = %s',$roomID);
+		$roomName = $wpdb->get_results($qry2);
 		echo '<h2>Add Extras</h2>';
-
 		if($type[0] == 0){
 			echo '<h5>Please confirm your booking dates and select any extras you wish to add</h5>';
 		}else{
 			echo '<h5>Please confirm your reservation dates and select any extras you wish to add</h5>';
 		}
-
 		echo '<ul>';
 		if(null !== $selectedDays){
 			foreach($selectedDays as $s){
-				echo '<li style="height: 5px;">'.$room.' '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+				echo '<li style="height: 5px;">Book the '.$roomName[0]->room_name.' on the '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
 			}
 		}
 		if(null !== $rSelections){
 			foreach($rSelections as $rs){
-				echo '<li style="height: 5px;">'.$room.' '.$rs.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+				echo '<li style="height: 5px;">Reserve the '.$roomName[0]->room_name.' on the '.$rs.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
 			}
 		}
 		echo '</ul>';
-
 		echo '<br />';
 		echo '<h5>Select the extras you wish to add to your bookings/reservations:</h5>';
-
 		echo '<form method="POST" action="?page_id='.$page_id.'&cmd=payment">';
 		foreach($extras as $ex){
 			echo '<input type="checkbox" name="chosenExtras[]" value='.$ex->id.'> 
 			<label style="display:inline-block; width: 20%">'.$ex->extra_name.'</label>   
 			<label style="display:inline-block; width: 20%">$'.$ex->price.'</label><br />';
 		}
-
 		if(null !== $selectedDays){
 			foreach($selectedDays as $s){
 				?>
@@ -368,21 +330,15 @@ function CJ_confirm_booking($data){
 				<?php
 			}
 		}
-
 		?>
 			<input type="hidden" name="roomID" value= <?php echo $roomID ?>>
 			<input type="hidden" name="type" value= <?php echo $type ?>>
 			<input type="hidden" name="selectedMonth" value= <?php echo $selectedMonth ?>>
 			<input type="hidden" name="selectedYear" value= <?php echo $selectedYear ?>>
 
-			<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Continue</button>
-			<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
+			<button type="submit" name="submit" value="submit" style="margin-left: 40%;" class="btn btn-primary">Continue</button>
 			</form>
 		<?php
 	}
 }
-
-
-
-
 ?>
