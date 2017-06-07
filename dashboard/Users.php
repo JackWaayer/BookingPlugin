@@ -1,6 +1,6 @@
 <?php
 //master CRUD selector
-function CJ_user_content() {
+function CJuserContent() {
 
 ?>
 
@@ -59,7 +59,7 @@ function CJ_user_content() {
 
 }
 
-CJ_user_content();
+CJuserContent();
 
 
 ?>

@@ -9,7 +9,7 @@
 
 */
 //master CRUD selector
-function CJ_room_content() {
+function CJroomContent() {
 
 ?> 
 <h1>Rooms</H1>
@@ -47,5 +47,5 @@ function CJ_room_content() {
 	CJ_list_rooms();
 }
 
-	CJ_room_content();
+	CJroomContent();
 ?>

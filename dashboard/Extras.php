@@ -1,6 +1,6 @@
 <?php
 //master CRUD selector
-function CJ_extras_content() {
+function CJextrasContent() {
 
 ?>
 
@@ -45,5 +45,5 @@ function CJ_extras_content() {
         </table>
       <?php
 }
-  CJ_extras_content();
+  CJextrasContent();
 ?>
