@@ -89,7 +89,6 @@ function CJ_payment($data){
 		<input type="hidden" name="selectedYear" value= <?php echo $data['selectedYear'] ?>>
 
 		<button type="submit" name="submit" value="submit" style="margin-left: 40%;" class="btn btn-primary">Confirm Payment</button>
-		<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button class="btn btn-info">Cancel</button></a>
 		</form>
 	<?php
 
@@ -101,9 +100,22 @@ function CJ_paymentInserts($data){
     $success = true;
     
 
+
 	foreach($data['days'] as $day){
         
         $formattedDate = $data['selectedYear'].'/'.$data['selectedMonth'].'/'.$day;
+
+		$qry3 = $wpdb->prepare('SELECT id FROM cj_booking WHERE date_booked = %s',$formattedDate);
+		$oldBooking = $wpdb->get_results($qry3);
+
+		if($oldBooking[0]->id !== null){
+			$results = $wpdb->query($wpdb->prepare("DELETE FROM cj_booking WHERE id=%s",$oldBooking[0]->id));
+			//Confirms deletion
+			/*if ($results) {
+				echo "<div class='alert alert-success'>Delete Success!</div>";
+			}*/
+		}
+
         $uid = get_current_user_id();
 
         $qry1 = $wpdb->prepare('SELECT * FROM cj_account WHERE user_id = %s',$uid);
@@ -143,11 +155,11 @@ function CJ_paymentInserts($data){
 
     if($success){
         ?>
-            <h3 style='color:green; text-align:center;'>Payment Successful!</h3>
+            <div class="alert alert-success">Payment Successful!</div>
         <?php
     }else{
         ?>
-            <h3 style='color:red; text-align:center;'>Something went terribly wrong.</h3>
+            <div class="alert alert-danger">Something went terribly wrong.</div>
         <?php
     }
 }

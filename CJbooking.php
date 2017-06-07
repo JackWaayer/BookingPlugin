@@ -93,12 +93,13 @@ function CJ_removeBooking($data){
 	global $wpdb;
 
 	if($data['deleteBooking'] !== null){
+		$results;
 		foreach($data['deleteBooking'] as $del){
 			$results = $wpdb->query($wpdb->prepare("DELETE FROM cj_booking WHERE id=%s",$del));
-			if ($results) {
-				echo "<h3>Delete Success!</h3>";
-			}
 		}
+		if ($results) {
+				echo "<div class='alert alert-success'>Delete Success!</div>";
+			}
 	}
 	else{
 		?>
@@ -378,7 +379,6 @@ function CJ_confirm_booking($data){
 			<input type="hidden" name="selectedYear" value= <?php echo $selectedYear ?>>
 
 			<button type="submit" name="submit" value="submit" style="margin-left: 40%;" class="btn btn-primary">Continue</button>
-			<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button class="btn btn-info">Cancel</button></a>
 			</form>
 		<?php
 	}
