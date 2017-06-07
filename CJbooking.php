@@ -92,11 +92,18 @@ function CJ_list_bookings($accountID){
 function CJ_removeBooking($data){
 	global $wpdb;
 
-	foreach($data['deleteBooking'] as $del){
-		$results = $wpdb->query($wpdb->prepare("DELETE FROM cj_booking WHERE id=%s",$del));
-   		if ($results) {
-      		echo "<h3>Delete Success!</h3>";
-   		}
+	if($data['deleteBooking'] !== null){
+		foreach($data['deleteBooking'] as $del){
+			$results = $wpdb->query($wpdb->prepare("DELETE FROM cj_booking WHERE id=%s",$del));
+			if ($results) {
+				echo "<h3>Delete Success!</h3>";
+			}
+		}
+	}
+	else{
+		?>
+			<h5>No bookings were selected</h5>
+		<?php
 	}
 }
 
@@ -168,7 +175,7 @@ function CJ_booking_calendar($data){
 		date_default_timezone_set("Pacific/Auckland"); 
 		//days of the week used for headings. This particular method is not particulary multilanguage friendly.
 		$weekdays = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
-		extract(shortcode_atts(array('year' => '-', 'month' => $data['chosenMonth']), $shortcodeattributes));	
+		extract(shortcode_atts(array('year' => $data['chosenYear'], 'month' => $data['chosenMonth']), $shortcodeattributes));	
 
 		//default to the current month and year
 		if ($month == '-') $month = date('m');	
@@ -228,7 +235,7 @@ function CJ_booking_calendar($data){
 
 			foreach($bookings as $b){
 				$d = date_parse_from_format("Y-m-d", $b->date_booked);
-				if($d["month"] == $month && $d["day"] == $i+1){
+				if($d["year"] == $year && $d["month"] == $month && $d["day"] == $i+1){
 					if($b->type == 0){
 						?>
 							<p style="height: 5px; margin-left: 20px;">Booked</p>
@@ -289,78 +296,90 @@ function CJ_confirm_booking($data){
 	global $wpdb;
 
 	if(null!==($data['reservedSelectedDays']) && $data['type'] == 1){
-		header('Location:?page_id='.$page_id.'&cmd=makeBooking&msg=<h4>You may only book a reserved room</h4>');
+		?>
+		<div class='alert alert-danger'>
+			<h4>You may only book a reserved room</h4>
+		</div>
+		<?php
 	}
-	if(null == ($data['reservedSelectedDays']) && null == ($data['selectedDays'])){
-		header('Location:?page_id='.$page_id.'&cmd=makeBooking&msg=<h4>Please select at least one date to book/reserve.</h4>');
+	else if(null == ($data['reservedSelectedDays']) && null == ($data['selectedDays'])){
+		?>
+		<div class='alert alert-danger'>
+			<h4>Please select at least one date to book/reserve.</h4>
+		</div>
+		<?php
 	}
+	else{
 
-	$type = $data["type"];
-	$selectedDays = $data["selectedDays"];
-	$selectedMonth = $data["month"];
-	$selectedYear = $data["year"];
-	$rSelections = $data["reservedSelectedDays"];
-	$roomID = $data['roomID'];
+	
 
-	$qry = 'SELECT * FROM cj_extra';
-	$extras = $wpdb->get_results($qry);
+		$type = $data["type"];
+		$selectedDays = $data["selectedDays"];
+		$selectedMonth = $data["month"];
+		$selectedYear = $data["year"];
+		$rSelections = $data["reservedSelectedDays"];
+		$roomID = $data['roomID'];
 
-	echo '<h2>Add Extras</h2>';
+		$qry = 'SELECT * FROM cj_extra';
+		$extras = $wpdb->get_results($qry);
 
-	if($type[0] == 0){
-		echo '<h5>Please confirm your booking dates and select any extras you wish to add</h5>';
-	}else{
-		echo '<h5>Please confirm your reservation dates and select any extras you wish to add</h5>';
-	}
+		echo '<h2>Add Extras</h2>';
 
-	echo '<ul>';
-	if(null !== $selectedDays){
-		foreach($selectedDays as $s){
-			echo '<li style="height: 5px;">'.$room.' '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+		if($type[0] == 0){
+			echo '<h5>Please confirm your booking dates and select any extras you wish to add</h5>';
+		}else{
+			echo '<h5>Please confirm your reservation dates and select any extras you wish to add</h5>';
 		}
-	}
-	if(null !== $rSelections){
-		foreach($rSelections as $rs){
-			echo '<li style="height: 5px;">'.$room.' '.$rs.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+
+		echo '<ul>';
+		if(null !== $selectedDays){
+			foreach($selectedDays as $s){
+				echo '<li style="height: 5px;">'.$room.' '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+			}
 		}
-	}
-	echo '</ul>';
-
-	echo '<br />';
-	echo '<h5>Select the extras you wish to add to your bookings/reservations:</h5>';
-
-	echo '<form method="POST" action="?page_id='.$page_id.'&cmd=payment">';
-	foreach($extras as $ex){
-		echo '<input type="checkbox" name="chosenExtras[]" value='.$ex->id.'> 
-		<label style="display:inline-block; width: 20%">'.$ex->extra_name.'</label>   
-		<label style="display:inline-block; width: 20%">$'.$ex->price.'</label><br />';
-	}
-
-	if(null !== $selectedDays){
-		foreach($selectedDays as $s){
-			?>
-				<input type="hidden" name="days[]" value= <?php echo $s ?>>
-			<?php
+		if(null !== $rSelections){
+			foreach($rSelections as $rs){
+				echo '<li style="height: 5px;">'.$room.' '.$rs.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+			}
 		}
-	}
-	if(null !== $rSelections){
-		foreach($rSelections as $rs){
-			?>
-				<input type="hidden" name="days[]" value= <?php echo $rs ?>>
-			<?php
+		echo '</ul>';
+
+		echo '<br />';
+		echo '<h5>Select the extras you wish to add to your bookings/reservations:</h5>';
+
+		echo '<form method="POST" action="?page_id='.$page_id.'&cmd=payment">';
+		foreach($extras as $ex){
+			echo '<input type="checkbox" name="chosenExtras[]" value='.$ex->id.'> 
+			<label style="display:inline-block; width: 20%">'.$ex->extra_name.'</label>   
+			<label style="display:inline-block; width: 20%">$'.$ex->price.'</label><br />';
 		}
+
+		if(null !== $selectedDays){
+			foreach($selectedDays as $s){
+				?>
+					<input type="hidden" name="days[]" value= <?php echo $s ?>>
+				<?php
+			}
+		}
+		if(null !== $rSelections){
+			foreach($rSelections as $rs){
+				?>
+					<input type="hidden" name="days[]" value= <?php echo $rs ?>>
+				<?php
+			}
+		}
+
+		?>
+			<input type="hidden" name="roomID" value= <?php echo $roomID ?>>
+			<input type="hidden" name="type" value= <?php echo $type ?>>
+			<input type="hidden" name="selectedMonth" value= <?php echo $selectedMonth ?>>
+			<input type="hidden" name="selectedYear" value= <?php echo $selectedYear ?>>
+
+			<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Continue</button>
+			<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
+			</form>
+		<?php
 	}
-
-	?>
-		<input type="hidden" name="roomID" value= <?php echo $roomID ?>>
-		<input type="hidden" name="type" value= <?php echo $type ?>>
-		<input type="hidden" name="selectedMonth" value= <?php echo $selectedMonth ?>>
-		<input type="hidden" name="selectedYear" value= <?php echo $selectedYear ?>>
-
-		<button type="submit" name="submit" value="submit" style="margin-left: 40%;">Continue</button>
-		<a href="?page_id='<?php echo $page_id ?>'&cmd=makeBooking"><button>Cancel</button></a>
-		</form>
-	<?php
 }
 
 
