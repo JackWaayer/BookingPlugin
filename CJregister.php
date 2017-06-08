@@ -34,6 +34,14 @@ function CJ_register($data){
 	
 	if (isset($data['first_name'])){
 		
+		$qry4 = $wpdb->prepare('SELECT ID FROM wp_users WHERE user_login = %s',$data['username']);
+		$foundSameUser = $wpdb->get_results($qry4);
+		
+		if($foundSameUser[0]->id == null){
+			echo '<div class="alert alert-danger">That username already exisits, please use another.</div>';
+			$noErr = false;
+		}
+		
 		//Validate data in $data
 		if($data['password'] !== $data['confirmPassword'] || strlen($data['password']) < 6){
 			echo '<div class="alert alert-danger">The confirm password you entered did not match or was less than 6 characters</div>';
