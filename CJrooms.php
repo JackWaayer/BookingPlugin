@@ -104,46 +104,50 @@ function CJ_review($data){
     ?>
     <h1>Reviews</h1>
     <br />
-    <h5>Write a review for <?php echo $roomName[0]->room_name ?></h5>
+	<?php
+	if (is_user_logged_in()){
+	?>
+		<h5>Write a review for <?php echo $roomName[0]->room_name ?></h5>
 
-        <form method="POST">
-            <select name="rating" style="display: block; margin-bottom: 10px;" required>
-                <option value="" selected disabled>Choose rating</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
-            <textarea required maxlength="500" rows=5 cols=60 name="review" placeholder="Write your review here..."></textarea>
-            <input type="text" name="roomID" value="<?php echo $data['roomID'] ?>" style="visibility: hidden;">
-            <button type="submit" class="btn btn-info">Submit</button>
-        </form>
-        <br />
-    <?php
+		<form method="POST">
+			<select name="rating" style="display: block; margin-bottom: 10px;" required>
+				<option value="" selected disabled>Choose rating</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select>
+			<textarea required maxlength="500" rows=5 cols=60 name="review" placeholder="Write your review here..."></textarea>
+			<input type="text" name="roomID" value="<?php echo $data['roomID'] ?>" style="visibility: hidden;">
+			<button type="submit" class="btn btn-info">Submit</button>
+		</form>
+		<br />
+		<?php
 
 
 
-    if(isset($data['review']) && isset($data['rating'])){
-        $uid = get_current_user_id();
-        $qry1 = $wpdb->prepare('SELECT id from cj_account WHERE user_id = %s',$uid);
-        $accountID = $wpdb->get_results($qry1);
-        if(
-            $wpdb->insert('cj_review',
-				array(
-				'account_id'=>($accountID[0]->id),
-				'room_id'=>($data['roomID']),
-				'rating'=>($data['rating']),
-				'description'=>$data['review']),
-				array( '%s', '%s', '%s', '%s' ))
-        ){
-            ?>
-                <div class="alert alert-success">Review successfully submitted</div>
-            <?php
+		if(isset($data['review']) && isset($data['rating'])){
+			$uid = get_current_user_id();
+			$qry1 = $wpdb->prepare('SELECT id from cj_account WHERE user_id = %s',$uid);
+			$accountID = $wpdb->get_results($qry1);
+			if(
+				$wpdb->insert('cj_review',
+					array(
+					'account_id'=>($accountID[0]->id),
+					'room_id'=>($data['roomID']),
+					'rating'=>($data['rating']),
+					'description'=>$data['review']),
+					array( '%s', '%s', '%s', '%s' ))
+			){
+				?>
+					<div class="alert alert-success">Review successfully submitted</div>
+				<?php
 
-            
-        }
-    }
+				
+			}
+		}
+	}
 
 
     CJ_list_reviews($data['roomID']);
@@ -155,29 +159,37 @@ function CJ_list_reviews($roomID){
     global $wpdb;
 
     $qry = $wpdb->prepare('SELECT * FROM cj_review WHERE room_id = %s',$roomID);
-    $room = $wpdb->get_results($qry);
+    $review = $wpdb->get_results($qry);
+	
 
-    if($room[0] !== null){
+    if($review[0] !== null){
         ?>
         <table style="width: 80%;">
+			<col width="80">
             <col width="50">
             <tr>
+				<th>Username</th>
                 <th>Rating</th>
                 <th>Review</th>
             </tr>
         <?php
-        foreach($room as $oneRoom){
+        foreach($review as $oneReview){
+			$qry5 = $wpdb->prepare('SELECT first_name FROM cj_account WHERE id = %s',$oneReview->account_id);
+			$firstName = $wpdb->get_results($qry5);
             ?>
                     <tr>
-                        <td><?php echo $oneRoom->rating ?></td>
-                        <td><?php echo $oneRoom->description ?></td>
+						<td><?php echo $firstName[0]->first_name ?></td>
+                        <td><?php echo $oneReview->rating ?></td>
+                        <td><?php echo $oneReview->description ?></td>
                     </tr>
             <?php
         }
         ?>
             </table>
         <?php
-    }
+    }else{
+		echo '<h5>There are no reviews for this room</h5>';
+	}
 
 }
 
