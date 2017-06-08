@@ -299,12 +299,12 @@ function CJ_confirm_booking($data){
 		echo '<ul>';
 		if(null !== $selectedDays){
 			foreach($selectedDays as $s){
-				echo '<li style="height: 5px;">Book the '.$roomName[0]->room_name.' on the '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+				echo '<li style="height: 5px;">'.$roomName[0]->room_name.' on the '.$s.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
 			}
 		}
 		if(null !== $rSelections){
 			foreach($rSelections as $rs){
-				echo '<li style="height: 5px;">Reserve the '.$roomName[0]->room_name.' on the '.$rs.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
+				echo '<li style="height: 5px;">'.$roomName[0]->room_name.' on the '.$rs.'/'.$selectedMonth.'/'.$selectedYear.'</li><br />';
 			}
 		}
 		echo '</ul>';

@@ -117,7 +117,7 @@ function CJ_review($data){
             </select>
             <textarea required maxlength="500" rows=5 cols=60 name="review" placeholder="Write your review here..."></textarea>
             <input type="text" name="roomID" value="<?php echo $data['roomID'] ?>" style="visibility: hidden;">
-            <button type="submit">Submit</button>
+            <button type="submit" class="btn btn-info">Submit</button>
         </form>
         <br />
     <?php
